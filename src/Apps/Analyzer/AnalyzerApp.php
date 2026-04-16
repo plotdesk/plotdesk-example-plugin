@@ -106,13 +106,7 @@ class AnalyzerApp extends BasicApp
                     return null;
                 }
 
-                try {
-                    $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-
-                    return is_array($decoded) ? $decoded : null;
-                } catch (Throwable) {
-                    return null;
-                }
+                return $this->decodeAiJson($raw);
             }
         );
 
@@ -139,6 +133,34 @@ class AnalyzerApp extends BasicApp
             $language,
             is_array($topics) ? implode(', ', $topics) : '—',
         );
+    }
+
+    private function decodeAiJson(string $raw): ?array
+    {
+        $cleaned = trim($raw);
+
+        if (str_starts_with($cleaned, '```json')) {
+            $cleaned = trim(substr($cleaned, 7));
+        } elseif (str_starts_with($cleaned, '```')) {
+            $cleaned = trim(substr($cleaned, 3));
+        }
+
+        if (str_ends_with($cleaned, '```')) {
+            $cleaned = trim(substr($cleaned, 0, -3));
+        }
+
+        if (! str_starts_with($cleaned, '{') && ! str_starts_with($cleaned, '[')
+            && preg_match('/(\{[\s\S]*\}|\[[\s\S]*\])/', $cleaned, $matches)) {
+            $cleaned = $matches[1];
+        }
+
+        try {
+            $decoded = json_decode($cleaned, true, 512, JSON_THROW_ON_ERROR);
+
+            return is_array($decoded) ? $decoded : null;
+        } catch (Throwable) {
+            return null;
+        }
     }
 
     public function TranslateExampleText($arguments, ChatMessage $message, ChatMessageApp $chatMessageApp, ?ChatMessage $originalMessage = null): string
@@ -205,15 +227,7 @@ class AnalyzerApp extends BasicApp
 
         $message->removeLoading($loadingKey);
 
-        $entities = null;
-
-        if ($raw) {
-            try {
-                $entities = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-            } catch (Throwable) {
-                $entities = null;
-            }
-        }
+        $entities = $raw ? $this->decodeAiJson($raw) : null;
 
         if (! is_array($entities)) {
             return 'Error: Could not extract entities.';

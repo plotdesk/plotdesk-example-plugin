@@ -1,0 +1,7 @@
+node_modules/
+.env
+.phpunit.result.cache
+
+# IMPORTANT: vendor/ and dist/ are NOT ignored!
+# They must be committed so the plugin works without build steps on the target server.
+# Do NOT add vendor/ or dist/ to this file.

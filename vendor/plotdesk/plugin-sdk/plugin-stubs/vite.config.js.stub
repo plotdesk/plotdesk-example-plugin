@@ -1,0 +1,10 @@
+import { plotdeskPlugin } from '@plotdesk/plugin-vite';
+
+export default plotdeskPlugin({
+  pages: {
+    // 'MyPage': './resources/js/Pages/MyPage.vue',
+  },
+  payloads: {
+    // 'MyPayload': './resources/js/Payloads/MyPayload.vue',
+  },
+});

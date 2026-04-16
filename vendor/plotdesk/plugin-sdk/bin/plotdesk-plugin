@@ -1,0 +1,113 @@
+#!/usr/bin/env php
+<?php
+
+if ($argc < 3 || $argv[1] !== 'create') {
+    echo "Usage: plotdesk-plugin create <plugin-name>\n";
+    echo "\nCreates a new plotdesk plugin project with boilerplate.\n";
+    echo "\nExamples:\n";
+    echo "  plotdesk-plugin create my-awesome-plugin\n";
+    echo "  plotdesk-plugin create CRM Dashboard\n";
+    exit(1);
+}
+
+$pluginName = implode(' ', array_slice($argv, 2));
+$pluginSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9-]+/', '-', $pluginName), '-'));
+$pluginStudly = str_replace(' ', '', ucwords(str_replace('-', ' ', $pluginSlug)));
+$namespace = $pluginStudly;
+
+$targetDir = getcwd() . '/' . $pluginSlug;
+
+if (is_dir($targetDir)) {
+    echo "Error: Directory '{$pluginSlug}' already exists.\n";
+    exit(1);
+}
+
+$stubsDir = dirname(__DIR__) . '/plugin-stubs';
+
+echo "┌─────────────────────────────────────────────────┐\n";
+echo "│  plotdesk Plugin SDK — Create New Plugin         │\n";
+echo "└─────────────────────────────────────────────────┘\n\n";
+echo "  Name:      {$pluginName}\n";
+echo "  Slug:      {$pluginSlug}\n";
+echo "  Namespace: {$namespace}\n";
+echo "  Directory: {$targetDir}\n\n";
+
+$dirs = [
+    '',
+    '/src',
+    '/src/Apps/' . $pluginStudly,
+    '/src/Http/Controllers',
+    '/src/Models',
+    '/routes',
+    '/resources/js/Pages',
+    '/resources/js/Payloads',
+    '/resources/lang/en',
+    '/resources/lang/de',
+    '/database/migrations',
+    '/dist',
+    '/.cursor/rules',
+];
+
+foreach ($dirs as $dir) {
+    mkdir($targetDir . $dir, 0755, true);
+}
+
+$replacements = [
+    '{{PLUGIN_SLUG}}' => $pluginSlug,
+    '{{PLUGIN_NAME}}' => $pluginName,
+    '{{PLUGIN_STUDLY}}' => $pluginStudly,
+    '{{NAMESPACE}}' => $namespace,
+    '{{NAMESPACE_ESCAPED}}' => str_replace('\\', '\\\\', $namespace),
+    '{{PLUGIN_SLUG_UNDERSCORED}}' => str_replace('-', '_', $pluginSlug),
+];
+
+$stubs = [
+    'plugin.json.stub' => 'plugin.json',
+    'composer.json.stub' => 'composer.json',
+    'package.json.stub' => 'package.json',
+    'vite.config.js.stub' => 'vite.config.js',
+    'tailwind.config.js.stub' => 'tailwind.config.js',
+    'postcss.config.js.stub' => 'postcss.config.js',
+    'gitignore.stub' => '.gitignore',
+    'PluginServiceProvider.php.stub' => "src/{$pluginStudly}Plugin.php",
+    'ExampleApp.php.stub' => "src/Apps/{$pluginStudly}/{$pluginStudly}App.php",
+    'web.php.stub' => 'routes/web.php',
+    'api.php.stub' => 'routes/api.php',
+    'lang-en.php.stub' => 'resources/lang/en/plugin.php',
+    'lang-de.php.stub' => 'resources/lang/de/plugin.php',
+    'cursor-rules.mdc.stub' => '.cursor/rules/plotdesk-plugin.mdc',
+    'README.md.stub' => 'README.md',
+];
+
+foreach ($stubs as $stubFile => $targetFile) {
+    $stubPath = $stubsDir . '/' . $stubFile;
+    if (!file_exists($stubPath)) {
+        echo "  ⚠ Stub not found: {$stubFile}\n";
+        continue;
+    }
+
+    $content = file_get_contents($stubPath);
+    $content = str_replace(array_keys($replacements), array_values($replacements), $content);
+
+    file_put_contents($targetDir . '/' . $targetFile, $content);
+    echo "  ✓ {$targetFile}\n";
+}
+
+echo "\n✅ Plugin '{$pluginName}' created successfully!\n";
+echo "\n";
+echo "┌─ Next Steps ────────────────────────────────────┐\n";
+echo "│                                                  │\n";
+echo "│  1. cd {$pluginSlug}                             \n";
+echo "│  2. composer install                             │\n";
+echo "│  3. Edit plugin.json (author, description, etc.) │\n";
+echo "│  4. Start developing in src/                     │\n";
+echo "│                                                  │\n";
+echo "│  For local development in plotdesk:               │\n";
+echo "│  Copy or symlink to storage/app/plugins-dev/     │\n";
+echo "│                                                  │\n";
+echo "│  For frontend (optional):                        │\n";
+echo "│  npm install && npm run build                    │\n";
+echo "│                                                  │\n";
+echo "└──────────────────────────────────────────────────┘\n";
+echo "\n";
+echo "Remember: Both vendor/ and dist/ must be committed to git!\n";

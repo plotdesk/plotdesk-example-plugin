@@ -1,0 +1,55 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "3b1f4b25f2e0220cfa412a0f20ff194a",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "plotdesk/plugin-sdk",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../../../../packages/plugin-sdk",
+                "reference": "98254d259d478b42f59f59b42f6a278d681cdad1"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "bin": [
+                "bin/plotdesk-plugin"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Plotdesk\\PluginSdk\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "SDK for developing plotdesk plugins",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^8.2"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

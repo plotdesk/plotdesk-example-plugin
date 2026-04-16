@@ -1,0 +1,7 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+// API routes are automatically prefixed with /api/plugins/{{PLUGIN_SLUG}}/
+// and named with api.plugin.{{PLUGIN_SLUG}}.
+// Middleware: api, auth:sanctum

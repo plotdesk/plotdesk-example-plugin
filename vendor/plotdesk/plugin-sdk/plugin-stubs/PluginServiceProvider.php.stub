@@ -1,0 +1,18 @@
+<?php
+
+namespace {{NAMESPACE}};
+
+use App\Plugins\PluginServiceProvider;
+
+class {{PLUGIN_STUDLY}}Plugin extends PluginServiceProvider
+{
+    public function pluginId(): string
+    {
+        return '{{PLUGIN_SLUG}}';
+    }
+
+    public function boot(): void
+    {
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', '{{PLUGIN_SLUG}}');
+    }
+}

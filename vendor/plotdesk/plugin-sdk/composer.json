@@ -1,0 +1,24 @@
+{
+    "name": "plotdesk/plugin-sdk",
+    "description": "SDK for developing plotdesk plugins",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Plotdesk\\PluginSdk\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/plotdesk-plugin"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    },
+    "minimum-stability": "stable"
+}

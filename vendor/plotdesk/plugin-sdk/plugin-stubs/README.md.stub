@@ -1,0 +1,101 @@
+# {{PLUGIN_NAME}}
+
+A plotdesk plugin.
+
+## Installation
+
+This plugin is installed via the plotdesk Plugin Management UI:
+1. Go to Platform Admin > Plugins
+2. Connect your GitHub account (if not already connected)
+3. Select this repository and click "Install"
+
+## Development Setup
+
+```bash
+composer install
+npm install
+```
+
+## Frontend Build
+
+This plugin uses `@plotdesk/plugin-vite` to build frontend assets. Vue and Inertia are externalized and provided by the plotdesk host application at runtime — your bundle stays small.
+
+```bash
+npm run build        # Build to dist/ (must be committed!)
+npm run dev          # Watch mode during development
+```
+
+Configure your pages and payloads in `vite.config.js`:
+
+```js
+import { plotdeskPlugin } from '@plotdesk/plugin-vite';
+
+export default plotdeskPlugin({
+  pages: {
+    'MyPage': './resources/js/Pages/MyPage.vue',
+  },
+  payloads: {
+    'MyPayload': './resources/js/Payloads/MyPayload.vue',
+  },
+});
+```
+
+## Structure
+
+```
+{{PLUGIN_SLUG}}/
+  plugin.json                # Plugin manifest (apps, permissions, navigation, interfaces)
+  composer.json              # PHP dependencies (plotdesk/plugin-sdk)
+  package.json               # Frontend dependencies (@plotdesk/plugin-vite)
+  vite.config.js             # Frontend build config
+  tailwind.config.js         # Tailwind CSS config
+  src/
+    {{PLUGIN_STUDLY}}Plugin.php    # Service provider (routes, events, commands)
+    Apps/
+      {{PLUGIN_STUDLY}}/
+        {{PLUGIN_STUDLY}}App.php   # AI function definitions
+    Http/Controllers/              # Controllers for custom pages
+    Models/                        # Eloquent models
+  routes/web.php             # Web routes (auto-prefixed with /plugins/{{PLUGIN_SLUG}}/)
+  resources/
+    js/Pages/                # Vue page components
+    js/Payloads/             # Vue payload components (rich chat output)
+    lang/                    # Translations
+  database/migrations/       # Migrations (tables must be prefixed: {{PLUGIN_SLUG}}_*)
+  vendor/                    # PHP dependencies (committed!)
+  dist/                      # Pre-built frontend assets (committed!)
+```
+
+## Important Rules
+
+- `vendor/` and `dist/` are **committed to git** — no build steps run on the target server
+- `node_modules/` is **not** committed (only needed for local development)
+- Database tables must be prefixed with `{{PLUGIN_SLUG}}_`
+- After `composer install/update` → commit `vendor/`
+- After `npm run build` → commit `dist/`
+
+## AI Function Development
+
+Edit `src/Apps/{{PLUGIN_STUDLY}}/{{PLUGIN_STUDLY}}App.php` to add AI functions. Each function:
+- Is declared in `getFunctions()` with name, description, and parameters
+- Has a handler method in StudlyCase (e.g., `search_contacts` → `SearchContacts`)
+- Returns a string that the AI uses as context
+- Can use `$message->attachPayload()` for rich UI rendering
+- Can use `$message->setLoading()` / `removeLoading()` for loading states
+
+## Using AI in Your Plugin
+
+```php
+use App\Plugins\Support\PluginAi;
+use App\Plugins\Support\PluginChat;
+
+// Direct AI call (simple, no platform context)
+$result = PluginAi::call($team, 'You are a translator.', 'Translate: Hello', 'plugin:{{PLUGIN_SLUG}}:translate');
+
+// Programmatic chat (full platform context — apps, silos, tables, etc.)
+$result = PluginChat::run($team, $groupId, 'Analyze the latest sales data', 'plugin:{{PLUGIN_SLUG}}:analysis');
+```
+
+## Configuration
+
+Plugin settings are defined in `plugin.json` under `apps[].setting_fields`. Admins configure them per team and group in the plotdesk App Settings.

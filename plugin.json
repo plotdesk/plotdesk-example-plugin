@@ -1,0 +1,279 @@
+{
+  "id": "plotdesk-example-plugin",
+  "name": "plotdesk Example Plugin",
+  "version": "1.0.0",
+  "min_plotdesk_version": "4.50.0",
+  "author": "plotdesk",
+  "description": "Reference plugin showcasing the full capabilities of the plotdesk Plugin SDK: multiple apps, custom pages, custom interfaces, AI integrations, events, permissions, migrations and rich chat payloads.",
+  "provider": "PlotdeskExamplePlugin\\PlotdeskExamplePluginPlugin",
+  "namespace": "PlotdeskExamplePlugin",
+
+  "apps": [
+    {
+      "id": "plotdesk-example-plugin-tasks",
+      "name": "Example Tasks",
+      "description": "Lightweight task tracker demonstrated by the plotdesk example plugin. Use create_example_task when the user wants to capture a to-do, action item, follow-up or reminder. Use list_example_tasks to show an overview, search_example_tasks to find specific ones, complete_example_task to mark them done, and delete_example_task to remove them. Always pick a sensible priority and due date.",
+      "privacy": "All task data is stored locally in the plotdesk database (table: plotdesk_example_plugin_tasks). No external services are contacted.",
+      "logo": "/plugins/plotdesk-example-plugin/assets/logo-tasks.svg",
+      "relevance": 7,
+      "categories": ["productivity", "automation"],
+      "has_app_screen": false,
+      "app_screen_description": "",
+      "class": "PlotdeskExamplePlugin\\Apps\\Tasks\\TasksApp",
+      "setting_fields": [
+        {
+          "key": "default_priority",
+          "type": "select",
+          "label": "Default Priority",
+          "options": [
+            {"value": "low", "label": "Low"},
+            {"value": "medium", "label": "Medium"},
+            {"value": "high", "label": "High"},
+            {"value": "urgent", "label": "Urgent"}
+          ],
+          "default": "medium"
+        },
+        {
+          "key": "auto_assign_creator",
+          "type": "boolean",
+          "label": "Auto-assign tasks to the creator",
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "plotdesk-example-plugin-notebook",
+      "name": "Example AI Notebook",
+      "description": "Smart notebook that lets the user capture and explore knowledge. Use create_example_note to save a note, search_example_notes for retrieval, summarize_example_note to get an AI summary of an existing note, and list_example_notes for an overview. Great for meeting notes, research snippets and decisions.",
+      "privacy": "Notes are stored locally in plotdesk_example_plugin_notes. Summaries are generated via the configured plotdesk AI provider.",
+      "logo": "/plugins/plotdesk-example-plugin/assets/logo-notebook.svg",
+      "relevance": 6,
+      "categories": ["content_creation", "data_analysis"],
+      "has_app_screen": false,
+      "app_screen_description": "",
+      "class": "PlotdeskExamplePlugin\\Apps\\Notebook\\NotebookApp",
+      "setting_fields": [
+        {
+          "key": "summary_language",
+          "type": "select",
+          "label": "Summary Language",
+          "options": [
+            {"value": "auto", "label": "Auto-detect"},
+            {"value": "en", "label": "English"},
+            {"value": "de", "label": "German"}
+          ],
+          "default": "auto"
+        },
+        {
+          "key": "summary_style",
+          "type": "select",
+          "label": "Summary Style",
+          "options": [
+            {"value": "bullet", "label": "Bullet points"},
+            {"value": "executive", "label": "Executive summary"},
+            {"value": "action", "label": "Action items"}
+          ],
+          "default": "bullet"
+        }
+      ]
+    },
+    {
+      "id": "plotdesk-example-plugin-analyzer",
+      "name": "Example Smart Analyzer",
+      "description": "AI-powered text analyzer. Use analyze_example_text to detect sentiment, language and key topics of any text. Use translate_example_text to translate between languages. Use extract_example_entities to pull out people, places, dates and organizations from a text.",
+      "privacy": "Text is sent to the configured plotdesk AI provider for analysis.",
+      "logo": "/plugins/plotdesk-example-plugin/assets/logo-analyzer.svg",
+      "relevance": 5,
+      "categories": ["data_analysis", "content_creation"],
+      "has_app_screen": false,
+      "app_screen_description": "",
+      "class": "PlotdeskExamplePlugin\\Apps\\Analyzer\\AnalyzerApp",
+      "setting_fields": [
+        {
+          "key": "default_target_language",
+          "type": "select",
+          "label": "Default Translation Target",
+          "options": [
+            {"value": "en", "label": "English"},
+            {"value": "de", "label": "German"},
+            {"value": "fr", "label": "French"},
+            {"value": "es", "label": "Spanish"}
+          ],
+          "default": "en"
+        }
+      ]
+    },
+    {
+      "id": "plotdesk-example-plugin-webhooks",
+      "name": "Example Webhook Dispatcher",
+      "description": "Trigger external HTTP endpoints (webhooks) from the chat. Use dispatch_example_webhook to fire a preconfigured webhook with a JSON payload, and list_example_webhook_events to show the history of all triggers for this team.",
+      "privacy": "Webhook requests are sent to the URL configured in the app settings. Payload contents are logged in plotdesk_example_plugin_webhook_events.",
+      "logo": "/plugins/plotdesk-example-plugin/assets/logo-webhooks.svg",
+      "relevance": 4,
+      "categories": ["automation", "development_tools"],
+      "has_app_screen": false,
+      "app_screen_description": "",
+      "class": "PlotdeskExamplePlugin\\Apps\\Webhooks\\WebhooksApp",
+      "setting_fields": [
+        {
+          "key": "webhook_url",
+          "type": "url",
+          "label": "Webhook URL",
+          "placeholder": "https://example.com/hooks/plotdesk",
+          "rules": ["nullable", "url"]
+        },
+        {
+          "key": "auth_header",
+          "type": "password",
+          "label": "Authorization Header (optional)",
+          "placeholder": "Bearer sk-..."
+        },
+        {
+          "key": "timeout_seconds",
+          "type": "number",
+          "label": "Timeout (seconds)",
+          "default": 10,
+          "rules": ["nullable", "integer", "min:1", "max:60"]
+        }
+      ]
+    }
+  ],
+
+  "permissions": {
+    "global": {
+      "manage_plotdesk_example_plugin": "Manage plotdesk Example Plugin",
+      "view_plotdesk_example_plugin_analytics": "View plotdesk Example Plugin Analytics"
+    },
+    "group": {
+      "use_plotdesk_example_plugin_tasks": "Use Example Tasks in this group",
+      "use_plotdesk_example_plugin_notes": "Use Example Notes in this group"
+    }
+  },
+
+  "navigation": [
+    {
+      "name": "Example Dashboard",
+      "route": "plugin.plotdesk-example-plugin.dashboard",
+      "icon": "SparklesIcon",
+      "section": "tools"
+    },
+    {
+      "name": "Example Tasks",
+      "route": "plugin.plotdesk-example-plugin.tasks.index",
+      "icon": "CheckCircleIcon",
+      "section": "tools"
+    },
+    {
+      "name": "Example Notebook",
+      "route": "plugin.plotdesk-example-plugin.notes.index",
+      "icon": "BookOpenIcon",
+      "section": "tools"
+    },
+    {
+      "name": "Example Analytics",
+      "route": "plugin.plotdesk-example-plugin.analytics",
+      "icon": "ChartBarIcon",
+      "section": "insights",
+      "permission": "view_plotdesk_example_plugin_analytics"
+    }
+  ],
+
+  "payloads": [
+    {
+      "function": "create_example_task",
+      "component": "TaskCreated"
+    },
+    {
+      "function": "list_example_tasks",
+      "component": "TaskList"
+    },
+    {
+      "function": "search_example_tasks",
+      "component": "TaskList"
+    },
+    {
+      "function": "complete_example_task",
+      "component": "TaskCreated"
+    },
+    {
+      "function": "create_example_note",
+      "component": "NoteCard"
+    },
+    {
+      "function": "list_example_notes",
+      "component": "NoteList"
+    },
+    {
+      "function": "search_example_notes",
+      "component": "NoteList"
+    },
+    {
+      "function": "summarize_example_note",
+      "component": "NoteSummary"
+    },
+    {
+      "function": "analyze_example_text",
+      "component": "TextAnalysis"
+    },
+    {
+      "function": "translate_example_text",
+      "component": "Translation"
+    },
+    {
+      "function": "extract_example_entities",
+      "component": "Entities"
+    },
+    {
+      "function": "dispatch_example_webhook",
+      "component": "WebhookResult"
+    }
+  ],
+
+  "interfaces": [
+    {
+      "id": "plotdesk-example-plugin-dashboard",
+      "name": "Example Dashboard",
+      "description": "Interactive overview of tasks, notes and webhook activity for this group.",
+      "component": "Dashboard",
+      "default_chat_enabled": true,
+      "settings_fields": [
+        {
+          "key": "show_completed_tasks",
+          "type": "boolean",
+          "label": "Show completed tasks",
+          "default": false
+        },
+        {
+          "key": "max_items",
+          "type": "select",
+          "label": "Items per column",
+          "options": [
+            {"value": "5", "label": "5"},
+            {"value": "10", "label": "10"},
+            {"value": "20", "label": "20"}
+          ],
+          "default": "10"
+        }
+      ]
+    },
+    {
+      "id": "plotdesk-example-plugin-kanban",
+      "name": "Example Kanban Board",
+      "description": "Drag-free kanban view of all example tasks in this group, grouped by status or priority.",
+      "component": "Kanban",
+      "default_chat_enabled": true,
+      "settings_fields": [
+        {
+          "key": "group_by",
+          "type": "select",
+          "label": "Group tasks by",
+          "options": [
+            {"value": "status", "label": "Status"},
+            {"value": "priority", "label": "Priority"}
+          ],
+          "default": "status"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+<?php
+
+namespace {{NAMESPACE}}\Apps\{{PLUGIN_STUDLY}};
+
+use App\Apps\BasicApp;
+use App\Models\ChatMessage;
+use App\Models\ChatMessageApp;
+use Override;
+
+class {{PLUGIN_STUDLY}}App extends BasicApp
+{
+    #[Override]
+    public function getFunctions(): array
+    {
+        return [
+            [
+                'name' => '{{PLUGIN_SLUG}}_example',
+                'label' => '{{PLUGIN_NAME}} Example',
+                'description' => 'An example function. Replace this with your actual functionality.',
+                'parameters' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'query' => [
+                            'type' => 'string',
+                            'description' => 'The search query',
+                        ],
+                    ],
+                    'required' => ['query'],
+                ],
+            ],
+        ];
+    }
+
+    public function {{PLUGIN_STUDLY}}Example($arguments, ChatMessage $message, ChatMessageApp $chatMessageApp, ?ChatMessage $originalMessage = null): string
+    {
+        $query = data_get($arguments, 'query');
+
+        if (empty($query)) {
+            return 'Error: No query provided.';
+        }
+
+        $message->setLoading('{{PLUGIN_SLUG}}_example', 'Processing...');
+
+        $result = "Example result for: {$query}";
+
+        $message->removeLoading('{{PLUGIN_SLUG}}_example');
+
+        $chatMessageApp->update(['results' => $result]);
+
+        return $result;
+    }
+}

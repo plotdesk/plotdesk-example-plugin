@@ -1,0 +1,17 @@
+{
+    "name": "{{PLUGIN_SLUG}}/{{PLUGIN_SLUG}}",
+    "description": "plotdesk plugin: {{PLUGIN_NAME}}",
+    "type": "plotdesk-plugin",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "plotdesk/plugin-sdk": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "{{NAMESPACE_ESCAPED}}\\": "src/"
+        }
+    }
+}

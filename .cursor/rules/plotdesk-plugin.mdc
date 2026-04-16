@@ -1,0 +1,257 @@
+# plotdesk Plugin Development
+
+## Architektur
+- Dieses Plugin wird als plotdesk Extension geladen
+- Es laeuft im Kontext einer plotdesk-Instanz (Laravel 12, PHP 8.3)
+- Plugins registrieren Apps (AI Functions) ueber plugin.json, nicht direkt
+- App-Klassen erweitern BasicApp (wie Core-Apps)
+- Verfuegbare plotdesk-Services: ChatMessage, Team, User, Group, StorageService
+- PHP-Dependencies via composer.json (plotdesk/plugin-sdk fuer Stubs und Autocompletion)
+- Frontend-Dependencies via package.json (@plotdesk/plugin-vite fuer Vite Build Preset)
+
+## App / Function Handler Pattern
+- App-Klassen leben in src/Apps/{AppName}/{AppName}App.php
+- Sie erweitern BasicApp und implementieren getFunctions()
+- Handler-Methode: FunctionName($arguments, ChatMessage $message, ChatMessageApp $chatMessageApp, ?ChatMessage $originalMessage): string
+- Function name in snake_case -> Methode in StudlyCase (z.B. search_contacts -> SearchContacts)
+- Return: String fuer den AI-Kontext
+- Fuer Frontend-Rendering: $message->attachPayload($function, $args, $results)
+- Fuer Loading-States: $message->setLoading($key, $text) / $message->removeLoading($key)
+
+## Verfuegbare plotdesk APIs
+- StorageService::savePrivateFileForChat($content, $filename, $chatId) - Private Dateien speichern
+- StorageService::downloadAndSaveAssetFromUrl($url, $filename) - URLs als oeffentliche Assets speichern
+- StorageService::downloadAndSaveAssetFromFile($content, $filename) - Content als Asset speichern
+- $message->attachPayload($function, $args, $results) - Rich UI Output (returns UUID)
+- $message->setPayload($payloadId, $function, $args, $results) - Payload aktualisieren
+- $message->setLoading($key, $text) - Loading Spinner anzeigen
+- $message->removeLoading($key) - Loading Spinner entfernen
+- $this->team - Aktuelles Team Model
+- $this->app->appSettings - App-Settings (konfiguriert pro Team/Gruppe)
+- data_get($this->app, 'appSettings.setting_key') - Einzelnes Setting lesen
+
+## AI-Zugriff fuer Plugins
+- PluginAi::call(team, systemPrompt, userPrompt, contextType, ...) - Direkter AI-Aufruf (einfach)
+- PluginChat::run(team, groupId, userMessage, contextType, ...) - Chat mit vollem Plattform-Zugriff
+- contextType immer als 'plugin:{pluginId}:{action}' formatieren
+- Kosten werden automatisch getrackt
+
+## Permissions
+- Eigene Permissions in plugin.json unter "permissions" deklarieren (global + group)
+- Immer namespaced (z.B. "view_crm_dashboard", nicht "view_dashboard")
+- Pruefen via $user->hasPermission('view_crm_dashboard')
+- Oder $user->hasPermissionForGroup('permission', $groupId) fuer Gruppen-Permissions
+- In Navigation: "permission": "view_crm_dashboard" in plugin.json
+
+## Integration Points (Hooks)
+- Domain Events: Lausche auf chat.created, chat.message.created, user.joined_team etc. via events() in ServiceProvider
+- Model Observers: ChatMessage::observe() in boot()
+- Queue Jobs: Eigene Jobs mit ShouldQueue, $queue = 'default' (NICHT 'chat')
+- Broadcasting: Eigene WebSocket Events auf plugin.{pluginId}.{teamId} Channels
+- Notifications: $user->notify(new MyNotification())
+- Console Commands: Registriere in boot() mit $this->commands([])
+- Scheduled Tasks: In schedule() Methode des ServiceProviders
+- Cache: PluginCache::remember($pluginId, $key, $teamId, $minutes, $callback)
+- Mail: Eigene Mailables mit Plugin-namespaced Views
+- Shared Props: PluginSharedData::register($pluginId, fn() => [...]) fuer Frontend
+
+## Frontend Build
+- Das Plugin nutzt `@plotdesk/plugin-vite` fuer den Frontend-Build
+- Vue und Inertia werden NICHT gebundelt sondern vom plotdesk Host bereitgestellt (externalized via window.__plotdesk_shared)
+- Konfiguration in vite.config.js: Pages und Payloads als Entry Points definieren
+- `npm run build` baut nach dist/ (ESM Module + Tailwind CSS)
+- `npm run dev` startet Watch-Mode fuer Entwicklung
+- In Vue-Komponenten Vue und Inertia ganz normal importieren (import { ref } from 'vue') - Vite externalisiert automatisch
+- Tailwind CSS wird automatisch nach dist/css/plugin.css kompiliert
+- tailwind.config.js und postcss.config.js sind vorkonfiguriert
+
+## Build & Git
+- vendor/ wird ins Git committed (Plugin liefert Dependencies fertig aus)
+- dist/ wird ins Git committed (Pre-built Frontend Assets)
+- node_modules/ wird NICHT committed (nur fuer lokale Entwicklung)
+- .gitignore darf vendor/ und dist/ NICHT ignorieren!
+- Nach composer install/update: vendor/ committen
+- Nach npm run build: dist/ committen
+- IMMER beide Schritte ausfuehren und committen bevor ein Release erstellt wird
+
+## Custom Group Interfaces
+- Plugins can register custom interface types that appear in Group Settings as "View Mode" options
+- Declare interfaces in plugin.json under "interfaces" array
+- Each interface has: id, name, description, component (ESM in dist/interfaces/), settings_fields, default_chat_enabled
+- The component receives: group, chat, interfaceSettings, translations as props
+- settings_fields are configurable per group in Team Settings
+- interface_chat_enabled controls whether the chat input bar is visible (true/false, togglable by admin)
+- Example: {"id": "plotdesk-example-plugin-dashboard", "name": "Custom Dashboard", "component": "Dashboard", "description": "Custom view", "settings_fields": [{"key": "title", "type": "text", "label": "Title"}], "default_chat_enabled": true}
+
+## Plugin UI Guidelines
+
+Plugin-Komponenten (Interfaces, Payloads) werden als standalone .js Dateien in dist/ ausgeliefert und dynamisch per PluginComponentWrapper geladen. Sie haben KEINEN Zugriff auf Tailwind CSS oder Vue SFC Syntax – stattdessen verwenden sie das plotdesk Design Token System.
+
+### Design Token System
+
+Die PluginComponentWrapper injiziert CSS Custom Properties auf dem .pd-plugin Container. Plugins MUESSEN diese Tokens verwenden statt hardcodierter Werte, damit sie automatisch im Light- und Dark-Mode korrekt aussehen.
+
+#### Verfuegbare CSS Custom Properties
+
+```css
+/* Typografie */
+--pd-font              /* 'Figtree', system-ui, -apple-system, sans-serif */
+
+/* Hintergruende */
+--pd-bg-page           /* Seiten-Hintergrund (light: #f9fafb, dark: #0f0f0f) */
+--pd-bg-card           /* Karten-Hintergrund (light: #ffffff, dark: #141414) */
+--pd-bg-card-hover     /* Karten-Hover (light: #f9fafb, dark: #1a1a1a) */
+--pd-bg-subtle         /* Subtiler Hintergrund fuer Badges/Sections (light: #f3f4f6, dark: #1e2229) */
+--pd-bg-muted          /* Gedaempfter Hintergrund (light: #e5e7eb, dark: #2a2e35) */
+
+/* Borders */
+--pd-border            /* Standard-Border (light: #e5e7eb, dark: rgba(255,255,255,0.06)) */
+--pd-border-light      /* Subtiler Border fuer Trennlinien (light: #f3f4f6, dark: rgba(255,255,255,0.04)) */
+--pd-border-hover      /* Hover-Border (light: #d1d5db, dark: rgba(255,255,255,0.12)) */
+
+/* Text */
+--pd-text-primary      /* Haupttext (light: #111827, dark: #f3f4f6) */
+--pd-text-secondary    /* Sekundaertext (light: #6b7280, dark: #9ca3af) */
+--pd-text-muted        /* Gedaempfter Text fuer Labels (light: #9ca3af, dark: #6b7280) */
+--pd-text-inverse      /* Invertierter Text fuer dunkle Hintergruende */
+
+/* Semantische Farben */
+--pd-brand             /* plotdesk Primaerfarbe: #0C359E */
+--pd-brand-light       /* Transparente Variante fuer Hintergruende */
+--pd-success           /* Erfolg/Positiv: #059669 */
+--pd-success-light     /* Transparente Variante */
+--pd-warning           /* Warnung: #d97706 */
+--pd-warning-light     /* Transparente Variante */
+--pd-danger            /* Fehler/Negativ: #dc2626 */
+--pd-danger-light      /* Transparente Variante */
+--pd-info              /* Info/Neutral: #2563eb */
+--pd-info-light        /* Transparente Variante */
+
+/* Border Radius */
+--pd-radius-sm         /* 6px – kleine Badges, Tags */
+--pd-radius-md         /* 8px – Buttons, kleine Karten */
+--pd-radius-lg         /* 12px – Karten, Panels */
+--pd-radius-xl         /* 16px – grosse Container */
+
+/* Schatten */
+--pd-shadow-sm         /* Minimaler Schatten fuer ruhende Elemente */
+--pd-shadow-md         /* Mittlerer Schatten fuer Hover-Effekte */
+--pd-shadow-card       /* Standard Karten-Schatten */
+
+/* Spacing */
+--pd-space-xs          /* 4px */
+--pd-space-sm          /* 8px */
+--pd-space-md          /* 12px */
+--pd-space-lg          /* 16px */
+--pd-space-xl          /* 24px */
+--pd-space-2xl         /* 32px */
+```
+
+### Grundstruktur einer Interface-Komponente
+
+```javascript
+export default {
+  props: ['group', 'chat', 'interfaceSettings', 'translations'],
+  methods: {
+    t(key, params) {
+      if (!this.translations) return key;
+      var val = this.translations[key] || key;
+      if (params) {
+        Object.keys(params).forEach(function(p) {
+          val = val.replace('{' + p + '}', params[p]);
+        });
+      }
+      return val;
+    },
+  },
+  template: `
+    <div style="height: 100%; display: flex; flex-direction: column; background: var(--pd-bg-page); font-family: var(--pd-font);">
+      <div style="padding: var(--pd-space-xl); padding-bottom: var(--pd-space-lg); flex-shrink: 0;">
+        <!-- Header -->
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 var(--pd-space-xl) var(--pd-space-xl); min-height: 0;">
+        <!-- Scrollbarer Content -->
+      </div>
+    </div>
+  `,
+};
+```
+
+### Styling-Regeln
+
+IMMER:
+- font-family: var(--pd-font) auf dem Root-Element
+- height: 100% auf dem Root-Element
+- display: flex; flex-direction: column fuer Header + scrollbarer Body Layouts
+- Design Tokens fuer ALLE Farben, Schatten, Radien und Abstaende
+- Hover-Effekte zurueckhaltend (nur border + shadow Wechsel)
+- transition: all 0.15s ease fuer sanfte Hover-Uebergaenge
+- min-height: 0 auf flex-children die scrollen sollen
+
+NIEMALS:
+- Hardcodierte Farben (kein #ffffff, #000000 etc.)
+- Eigene Font-Stacks definieren
+- !important verwenden
+- Uebermaessige Schatten, Glows oder Gradients
+- Riesige Font-Sizes (max 18px fuer Zahlen, 16px fuer Ueberschriften)
+- Externe CSS-Dateien laden
+- Tailwind-Klassen verwenden (nicht verfuegbar in Interfaces/Payloads)
+
+### UI Patterns
+
+Karten:
+```javascript
+{ background: 'var(--pd-bg-card)', borderRadius: 'var(--pd-radius-lg)', padding: 'var(--pd-space-lg)', border: '1px solid var(--pd-border)', boxShadow: 'var(--pd-shadow-sm)' }
+```
+
+Stat/KPI-Cards:
+```javascript
+{ padding: 'var(--pd-space-sm) var(--pd-space-lg)', background: 'var(--pd-bg-card)', borderRadius: 'var(--pd-radius-lg)', border: '1px solid var(--pd-border)', boxShadow: 'var(--pd-shadow-sm)' }
+// Label: fontSize 10px, uppercase, letter-spacing 0.5px, color var(--pd-text-muted)
+// Value: fontSize 18px, fontWeight 700, color var(--pd-text-primary)
+```
+
+Status-Badge:
+```javascript
+{ fontSize: '10px', fontWeight: 600, padding: '2px 6px', borderRadius: 'var(--pd-radius-sm)', background: 'var(--pd-success-light)', color: 'var(--pd-success)' }
+```
+
+Kanban/Board-Layouts:
+- Spalten mit flex: 1; min-width: 0 fuer gleichmaessige Verteilung
+- KEIN overflow-x: auto oder feste Spaltenbreiten
+- Aeusserer Container: display: flex; gap: var(--pd-space-md); overflow-y: hidden
+- Spalten-Content: overflow-y: auto fuer vertikales Scrollen
+- Karten-Gap: var(--pd-space-sm) (8px)
+
+### Navigation Icons
+
+Plugins definieren ihr Navigations-Icon in plugin.json ueber den Heroicon-Komponentennamen (Outline-Variante). Alle 324 Heroicons (Outline) stehen zur Verfuegung. Falls ein ungueltiger Name angegeben wird, wird automatisch PuzzlePieceIcon als Fallback verwendet.
+
+```json
+{ "navigation": [{ "name": "My Plugin", "route_name": "index", "icon": "SparklesIcon", "section": "tools" }] }
+```
+
+Verfuegbare Sections: tools (Standard), automation, insights, platform
+
+### Translations / Internationalisierung
+
+Plugins erhalten automatisch uebersetzte Strings als translations Prop. Die Sprachdateien liegen im Plugin unter resources/lang/{locale}/plugin.php (Standard Laravel Format).
+
+```php
+// resources/lang/de/plugin.php
+return [
+    'Sales Pipeline' => 'Verkaufs-Pipeline',
+    'Total Volume' => 'Gesamtvolumen',
+];
+```
+
+Labels in plugin.json (Name, Description, Settings Labels/Options) werden automatisch vom Backend uebersetzt. Der englische String dient als Key in resources/lang/{locale}/plugin.php.
+
+## Konventionen
+- Plugin-Tabellen muessen mit dem Plugin-ID prefixed sein (z.B. plotdesk-example-plugin_contacts)
+- App-IDs muessen mit Plugin-ID prefixed sein (z.B. plotdesk-example-plugin)
+- Routes leben unter /plugins/plotdesk-example-plugin/
+- API Routes unter /api/plugins/plotdesk-example-plugin/
+- Translations im resources/lang/ Ordner, Namespace: plotdesk-example-plugin::
+- Permission-Namen muessen eindeutig namespaced sein
+- Artisan Commands: plugin:plotdesk-example-plugin:command-name

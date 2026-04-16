@@ -1,0 +1,46 @@
+{
+  "id": "{{PLUGIN_SLUG}}",
+  "name": "{{PLUGIN_NAME}}",
+  "version": "1.0.0",
+  "min_plotdesk_version": "4.50.0",
+  "author": "",
+  "description": "",
+  "provider": "{{NAMESPACE}}\\{{PLUGIN_STUDLY}}Plugin",
+  "namespace": "{{NAMESPACE}}",
+
+  "apps": [
+    {
+      "id": "{{PLUGIN_SLUG}}",
+      "name": "{{PLUGIN_NAME}}",
+      "description": "Description for the AI — explain when to use this app and what it does.",
+      "privacy": "Data handling description",
+      "logo": "",
+      "relevance": 5,
+      "categories": [],
+      "has_app_screen": false,
+      "app_screen_description": "",
+      "class": "{{NAMESPACE}}\\Apps\\{{PLUGIN_STUDLY}}\\{{PLUGIN_STUDLY}}App",
+      "setting_fields": []
+    }
+  ],
+
+  "permissions": {
+    "global": {
+      "manage_{{PLUGIN_SLUG_UNDERSCORED}}": "Manage {{PLUGIN_NAME}}"
+    },
+    "group": {}
+  },
+
+  "navigation": [
+    {
+      "name": "{{PLUGIN_NAME}}",
+      "route": "plugin.{{PLUGIN_SLUG}}.index",
+      "icon": "CubeIcon",
+      "section": "tools"
+    }
+  ],
+
+  "payloads": [],
+
+  "interfaces": []
+}

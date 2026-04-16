@@ -1,0 +1,11 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+// Routes are automatically prefixed with /plugins/{{PLUGIN_SLUG}}/
+// and named with plugin.{{PLUGIN_SLUG}}.
+// Middleware: web, auth, is_real_user
+
+Route::get('/', fn () => inertia('Plugins/Error', [
+    'error' => 'No page configured yet. Build your first page in resources/js/Pages/',
+]))->name('index');

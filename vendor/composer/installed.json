@@ -1,0 +1,45 @@
+{
+    "packages": [
+        {
+            "name": "plotdesk/plugin-sdk",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../../../../packages/plugin-sdk",
+                "reference": "98254d259d478b42f59f59b42f6a278d681cdad1"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "bin": [
+                "bin/plotdesk-plugin"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.0-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Plotdesk\\PluginSdk\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "SDK for developing plotdesk plugins",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            },
+            "install-path": "../plotdesk/plugin-sdk"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": [
+        "plotdesk/plugin-sdk"
+    ]
+}

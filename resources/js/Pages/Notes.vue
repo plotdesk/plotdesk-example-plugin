@@ -1,11 +1,14 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
     translations: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const notes = computed(() => props.payload?.data?.notes || []);
 
@@ -56,7 +59,7 @@ const removeNote = () => {
     if (!selectedNote.value) {
         return;
     }
-    if (!confirm(`Delete note "${selectedNote.value.title}"?`)) {
+    if (!confirm($t('Delete note "{title}"?', { title: selectedNote.value.title }))) {
         return;
     }
     router.delete(route('plugin.plotdesk-example-plugin.notes.destroy', { note: selectedNote.value.id }), {
@@ -70,17 +73,17 @@ const removeNote = () => {
     <div class="notebook">
         <aside class="notebook__sidebar">
             <div class="notebook__sidebar-header">
-                <h2 class="notebook__title">Notes</h2>
+                <h2 class="notebook__title">{{ $t('Notes') }}</h2>
                 <button type="button" class="pd-btn pd-btn--primary" @click="showNew = !showNew">
-                    {{ showNew ? 'Cancel' : '+ New' }}
+                    {{ showNew ? $t('Cancel') : $t('+ New') }}
                 </button>
             </div>
 
             <div v-if="showNew" class="notebook__new">
-                <input v-model="newNote.title" type="text" placeholder="Title" class="pd-input" />
-                <textarea v-model="newNote.content" placeholder="Write your note..." rows="3" class="pd-input"></textarea>
-                <input v-model="newNote.tags" type="text" placeholder="tags, comma, separated" class="pd-input" />
-                <button type="button" class="pd-btn pd-btn--primary" @click="createNote">Create</button>
+                <input v-model="newNote.title" type="text" :placeholder="$t('Title')" class="pd-input" />
+                <textarea v-model="newNote.content" :placeholder="$t('Write your note...')" rows="3" class="pd-input"></textarea>
+                <input v-model="newNote.tags" type="text" :placeholder="$t('tags, comma, separated')" class="pd-input" />
+                <button type="button" class="pd-btn pd-btn--primary" @click="createNote">{{ $t('Create') }}</button>
             </div>
 
             <ul class="notebook__list">
@@ -93,31 +96,31 @@ const removeNote = () => {
                 >
                     <div class="notebook__list-title">{{ note.title }}</div>
                     <div class="notebook__list-meta">
-                        <span v-if="note.summary" class="pd-chip pd-chip--success">summary</span>
+                        <span v-if="note.summary" class="pd-chip pd-chip--success">{{ $t('summary') }}</span>
                         <span v-for="tag in note.tags" :key="tag" class="pd-chip pd-chip--muted">{{ tag }}</span>
                     </div>
                 </li>
             </ul>
-            <div v-if="notes.length === 0" class="notebook__empty">No notes yet.</div>
+            <div v-if="notes.length === 0" class="notebook__empty">{{ $t('No notes yet.') }}</div>
         </aside>
 
         <main class="notebook__main">
             <div v-if="!selectedNote" class="notebook__placeholder">
-                Select a note to view or edit.
+                {{ $t('Select a note to view or edit.') }}
             </div>
             <div v-else class="notebook__detail">
                 <div class="notebook__detail-header">
                     <h1 v-if="!editing" class="notebook__detail-title">{{ selectedNote.title }}</h1>
                     <input v-else v-model="edited.title" type="text" class="pd-input pd-input--lg" />
                     <div class="notebook__detail-actions">
-                        <button v-if="!editing" type="button" class="pd-btn pd-btn--secondary" @click="startEdit">Edit</button>
-                        <button v-else type="button" class="pd-btn pd-btn--primary" @click="saveEdit">Save</button>
-                        <button type="button" class="pd-btn pd-btn--ghost pd-btn--danger" @click="removeNote">Delete</button>
+                        <button v-if="!editing" type="button" class="pd-btn pd-btn--secondary" @click="startEdit">{{ $t('Edit') }}</button>
+                        <button v-else type="button" class="pd-btn pd-btn--primary" @click="saveEdit">{{ $t('Save') }}</button>
+                        <button type="button" class="pd-btn pd-btn--ghost pd-btn--danger" @click="removeNote">{{ $t('Delete') }}</button>
                     </div>
                 </div>
 
                 <div v-if="selectedNote.summary" class="notebook__summary">
-                    <h3>AI Summary</h3>
+                    <h3>{{ $t('AI Summary') }}</h3>
                     <p>{{ selectedNote.summary }}</p>
                 </div>
 
@@ -208,6 +211,7 @@ const removeNote = () => {
 }
 .pd-input--lg { font-size: 20px; font-weight: 600; padding: 12px 14px; }
 .pd-input:focus { outline: none; border-color: var(--pd-brand); box-shadow: 0 0 0 3px var(--pd-brand-light); }
+.pd-input::placeholder { color: var(--pd-text-muted); }
 
 .pd-chip { display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 .pd-chip--success { background: var(--pd-success-light); color: var(--pd-success); }
@@ -218,10 +222,10 @@ const removeNote = () => {
     padding: 8px 14px; font-size: 13px; font-weight: 600;
     border-radius: var(--pd-radius-md); border: 1px solid transparent; cursor: pointer;
     text-decoration: none; font-family: inherit;
-    transition: background 150ms, color 150ms;
+    transition: background 150ms, color 150ms, filter 150ms;
 }
 .pd-btn--primary { background: var(--pd-brand); color: var(--pd-text-inverse); }
-.pd-btn--primary:hover { background: #081f66; }
+.pd-btn--primary:hover { filter: brightness(0.92); }
 .pd-btn--secondary { background: var(--pd-bg-subtle); color: var(--pd-text-primary); border-color: var(--pd-border); }
 .pd-btn--secondary:hover { background: var(--pd-bg-muted); }
 .pd-btn--ghost { background: transparent; color: var(--pd-text-secondary); }

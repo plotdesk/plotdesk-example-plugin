@@ -1,12 +1,17 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const tasks = computed(() => props.payload?.results?.tasks || []);
 const count = computed(() => props.payload?.results?.count || tasks.value.length);
+const countLabel = computed(() => `${count.value} ${count.value === 1 ? $t('task') : $t('tasks')}`);
 
 const priorityStyle = p => ({
     low: 'pd-chip--info',
@@ -21,16 +26,26 @@ const statusStyle = s => ({
     blocked: 'pd-chip--danger',
     done: 'pd-chip--success',
 })[s] || 'pd-chip--muted';
+
+const priorityLabel = priority => {
+    const map = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+    return $t(map[priority] || priority);
+};
+
+const statusLabel = status => {
+    const map = { open: 'Open', in_progress: 'In Progress', blocked: 'Blocked', done: 'Done' };
+    return $t(map[status] || status);
+};
 </script>
 
 <template>
     <div class="task-list">
         <div class="task-list__header">
-            <span>Example Tasks</span>
-            <span class="task-list__count">{{ count }} {{ count === 1 ? 'task' : 'tasks' }}</span>
+            <span>{{ $t('Example Tasks') }}</span>
+            <span class="task-list__count">{{ countLabel }}</span>
         </div>
 
-        <div v-if="tasks.length === 0" class="task-list__empty">No tasks found.</div>
+        <div v-if="tasks.length === 0" class="task-list__empty">{{ $t('No tasks found.') }}</div>
         <ul v-else class="task-list__items">
             <li v-for="task in tasks" :key="task.id" class="task-list__item">
                 <div class="task-list__main">
@@ -38,9 +53,9 @@ const statusStyle = s => ({
                     <span class="task-list__title">{{ task.title }}</span>
                 </div>
                 <div class="task-list__meta">
-                    <span v-if="task.priority" class="pd-chip" :class="priorityStyle(task.priority)">{{ task.priority }}</span>
-                    <span v-if="task.status" class="pd-chip" :class="statusStyle(task.status)">{{ task.status }}</span>
-                    <span v-if="task.due_date" class="task-list__due">Due {{ task.due_date }}</span>
+                    <span v-if="task.priority" class="pd-chip" :class="priorityStyle(task.priority)">{{ priorityLabel(task.priority) }}</span>
+                    <span v-if="task.status" class="pd-chip" :class="statusStyle(task.status)">{{ statusLabel(task.status) }}</span>
+                    <span v-if="task.due_date" class="task-list__due">{{ $t('Due {date}', { date: task.due_date }) }}</span>
                 </div>
             </li>
         </ul>

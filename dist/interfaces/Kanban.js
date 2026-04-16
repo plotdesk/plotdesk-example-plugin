@@ -1,17 +1,18 @@
-import { _ as m } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const y = { class: "kanban" }, g = { class: "kanban__header" }, b = ["disabled"], f = {
+import { u as g } from "../chunks/translator-CzLc3Cda.js";
+import { _ as f } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const b = { class: "kanban" }, B = { class: "kanban__header" }, E = ["disabled"], N = {
   key: 0,
   class: "kanban__error"
-}, B = { class: "kanban__board" }, E = { class: "kanban__count" }, N = {
+}, S = { class: "kanban__board" }, V = { class: "kanban__count" }, D = {
   key: 0,
   class: "kanban__empty"
-}, S = {
+}, C = {
   key: 1,
   class: "kanban__cards"
-}, V = { key: 0 }, C = { class: "kanban__card-meta" }, D = { class: "pd-chip pd-chip--muted" }, j = {
+}, j = { key: 0 }, x = { class: "kanban__card-meta" }, O = { class: "pd-chip pd-chip--muted" }, L = {
   key: 0,
   class: "kanban__due"
-}, x = { class: "kanban__card-actions" }, O = ["value", "onChange"], F = ["value"], L = {
+}, T = { class: "kanban__card-actions" }, F = ["value", "onChange"], A = ["value"], K = {
   __name: "Kanban",
   props: {
     group: { type: Object, default: () => ({}) },
@@ -20,44 +21,45 @@ const y = { class: "kanban" }, g = { class: "kanban__header" }, b = ["disabled"]
     translations: { type: Object, default: () => ({}) },
     payload: { type: Object, default: () => ({}) }
   },
-  setup(u) {
-    const w = u, p = window.__plotdesk_shared.vue.ref([]), _ = window.__plotdesk_shared.vue.ref(!0), a = window.__plotdesk_shared.vue.ref(null), l = window.__plotdesk_shared.vue.computed(() => {
+  setup(k) {
+    const c = k, t = g(window.__plotdesk_shared.vue.computed(() => c.translations)), w = window.__plotdesk_shared.vue.ref([]), l = window.__plotdesk_shared.vue.ref(!0), n = window.__plotdesk_shared.vue.ref(null), r = window.__plotdesk_shared.vue.computed(() => {
       var e;
-      return ((e = w.interfaceSettings) == null ? void 0 : e.group_by) === "priority" ? "priority" : "status";
-    }), r = async () => {
-      _.value = !0, a.value = null;
+      return ((e = c.interfaceSettings) == null ? void 0 : e.group_by) === "priority" ? "priority" : "status";
+    }), i = async () => {
+      l.value = !0, n.value = null;
       try {
         const e = await fetch(route("api.plugin.plotdesk-example-plugin.tasks.index"), {
           credentials: "same-origin",
           headers: { Accept: "application/json" }
         });
-        if (!e.ok) throw new Error(`Request failed (${e.status})`);
-        const t = await e.json();
-        p.value = Array.isArray(t == null ? void 0 : t.data) ? t.data : [];
+        if (!e.ok)
+          throw new Error(`Request failed (${e.status})`);
+        const d = await e.json();
+        w.value = Array.isArray(d == null ? void 0 : d.data) ? d.data : [];
       } catch (e) {
-        a.value = (e == null ? void 0 : e.message) || "Failed to load tasks.";
+        n.value = (e == null ? void 0 : e.message) || t("Failed to load tasks.");
       } finally {
-        _.value = !1;
+        l.value = !1;
       }
     };
-    window.__plotdesk_shared.vue.onMounted(r);
-    const k = [
-      { id: "open", title: "Open", accent: "var(--pd-text-secondary)" },
-      { id: "in_progress", title: "In Progress", accent: "var(--pd-brand)" },
-      { id: "blocked", title: "Blocked", accent: "var(--pd-danger)" },
-      { id: "done", title: "Done", accent: "var(--pd-success)" }
-    ], v = [
-      { id: "urgent", title: "Urgent", accent: "var(--pd-danger)" },
-      { id: "high", title: "High", accent: "var(--pd-warning)" },
-      { id: "medium", title: "Medium", accent: "var(--pd-brand)" },
-      { id: "low", title: "Low", accent: "var(--pd-info)" }
-    ], i = window.__plotdesk_shared.vue.computed(() => l.value === "priority" ? v : k), c = window.__plotdesk_shared.vue.computed(() => {
+    window.__plotdesk_shared.vue.onMounted(i);
+    const h = window.__plotdesk_shared.vue.computed(() => [
+      { id: "open", title: t("Open"), accent: "var(--pd-text-secondary)" },
+      { id: "in_progress", title: t("In Progress"), accent: "var(--pd-brand)" },
+      { id: "blocked", title: t("Blocked"), accent: "var(--pd-danger)" },
+      { id: "done", title: t("Done"), accent: "var(--pd-success)" }
+    ]), v = window.__plotdesk_shared.vue.computed(() => [
+      { id: "urgent", title: t("Urgent"), accent: "var(--pd-danger)" },
+      { id: "high", title: t("High"), accent: "var(--pd-warning)" },
+      { id: "medium", title: t("Medium"), accent: "var(--pd-brand)" },
+      { id: "low", title: t("Low"), accent: "var(--pd-info)" }
+    ]), u = window.__plotdesk_shared.vue.computed(() => r.value === "priority" ? v.value : h.value), p = window.__plotdesk_shared.vue.computed(() => {
       const e = {};
-      for (const t of i.value)
-        e[t.id] = p.value.filter((d) => d[l.value] === t.id);
+      for (const d of u.value)
+        e[d.id] = w.value.filter((o) => o[r.value] === d.id);
       return e;
-    }), h = async (e, t) => {
-      var d;
+    }), m = (e) => t({ low: "Low", medium: "Medium", high: "High", urgent: "Urgent" }[e] || e), y = async (e, d) => {
+      var o;
       try {
         if (!(await fetch(route("api.plugin.plotdesk-example-plugin.tasks.update", { task: e.id }), {
           method: "PUT",
@@ -65,62 +67,63 @@ const y = { class: "kanban" }, g = { class: "kanban__header" }, b = ["disabled"]
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": ((d = document.querySelector('meta[name="csrf-token"]')) == null ? void 0 : d.content) || ""
+            "X-CSRF-TOKEN": ((o = document.querySelector('meta[name="csrf-token"]')) == null ? void 0 : o.content) || ""
           },
-          body: JSON.stringify({ [l.value]: t })
-        })).ok) return;
-        await r();
-      } catch (s) {
-        a.value = (s == null ? void 0 : s.message) || "Update failed";
+          body: JSON.stringify({ [r.value]: d })
+        })).ok)
+          return;
+        await i();
+      } catch (a) {
+        n.value = (a == null ? void 0 : a.message) || t("Update failed");
       }
     };
-    return (e, t) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", y, [
-      window.__plotdesk_shared.vue.createElementVNode("header", g, [
-        t[0] || (t[0] = window.__plotdesk_shared.vue.createElementVNode("h2", null, "Example Kanban", -1)),
+    return (e, d) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", b, [
+      window.__plotdesk_shared.vue.createElementVNode("header", B, [
+        window.__plotdesk_shared.vue.createElementVNode("h2", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Example Kanban")), 1),
         window.__plotdesk_shared.vue.createElementVNode("button", {
           type: "button",
           class: "pd-btn pd-btn--secondary",
-          disabled: _.value,
-          onClick: r
-        }, window.__plotdesk_shared.vue.toDisplayString(_.value ? "Loading..." : "Refresh"), 9, b)
+          disabled: l.value,
+          onClick: i
+        }, window.__plotdesk_shared.vue.toDisplayString(l.value ? window.__plotdesk_shared.vue.unref(t)("Loading...") : window.__plotdesk_shared.vue.unref(t)("Refresh")), 9, E)
       ]),
-      a.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", f, window.__plotdesk_shared.vue.toDisplayString(a.value), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-      window.__plotdesk_shared.vue.createElementVNode("div", B, [
-        (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(i.value, (d) => {
-          var s;
+      n.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", N, window.__plotdesk_shared.vue.toDisplayString(n.value), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
+      window.__plotdesk_shared.vue.createElementVNode("div", S, [
+        (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(u.value, (o) => {
+          var a;
           return window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("section", {
-            key: d.id,
+            key: o.id,
             class: "kanban__column"
           }, [
             window.__plotdesk_shared.vue.createElementVNode("header", {
               class: "kanban__column-header",
-              style: window.__plotdesk_shared.vue.normalizeStyle({ borderColor: d.accent })
+              style: window.__plotdesk_shared.vue.normalizeStyle({ borderColor: o.accent })
             }, [
-              window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(d.title), 1),
-              window.__plotdesk_shared.vue.createElementVNode("span", E, window.__plotdesk_shared.vue.toDisplayString(((s = c.value[d.id]) == null ? void 0 : s.length) || 0), 1)
+              window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(o.title), 1),
+              window.__plotdesk_shared.vue.createElementVNode("span", V, window.__plotdesk_shared.vue.toDisplayString(((a = p.value[o.id]) == null ? void 0 : a.length) || 0), 1)
             ], 4),
-            (c.value[d.id] || []).length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", N, "No tasks")) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", S, [
-              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(c.value[d.id], (o) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("article", {
-                key: o.id,
+            (p.value[o.id] || []).length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", D, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("No tasks")), 1)) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", C, [
+              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(p.value[o.id], (s) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("article", {
+                key: s.id,
                 class: "kanban__card"
               }, [
-                window.__plotdesk_shared.vue.createElementVNode("h4", null, window.__plotdesk_shared.vue.toDisplayString(o.title), 1),
-                o.description ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("p", V, window.__plotdesk_shared.vue.toDisplayString(o.description), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-                window.__plotdesk_shared.vue.createElementVNode("div", C, [
-                  window.__plotdesk_shared.vue.createElementVNode("span", D, window.__plotdesk_shared.vue.toDisplayString(o.priority), 1),
-                  o.due_date ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", j, "Due " + window.__plotdesk_shared.vue.toDisplayString(o.due_date), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
-                ]),
+                window.__plotdesk_shared.vue.createElementVNode("h4", null, window.__plotdesk_shared.vue.toDisplayString(s.title), 1),
+                s.description ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("p", j, window.__plotdesk_shared.vue.toDisplayString(s.description), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
                 window.__plotdesk_shared.vue.createElementVNode("div", x, [
+                  window.__plotdesk_shared.vue.createElementVNode("span", O, window.__plotdesk_shared.vue.toDisplayString(m(s.priority)), 1),
+                  s.due_date ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", L, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Due {date}", { date: s.due_date })), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
+                ]),
+                window.__plotdesk_shared.vue.createElementVNode("div", T, [
                   window.__plotdesk_shared.vue.createElementVNode("select", {
                     class: "pd-input pd-input--sm",
-                    value: o[l.value],
-                    onChange: (n) => h(o, n.target.value)
+                    value: s[r.value],
+                    onChange: (_) => y(s, _.target.value)
                   }, [
-                    (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(i.value, (n) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("option", {
-                      key: n.id,
-                      value: n.id
-                    }, window.__plotdesk_shared.vue.toDisplayString(n.title), 9, F))), 128))
-                  ], 40, O)
+                    (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(u.value, (_) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("option", {
+                      key: _.id,
+                      value: _.id
+                    }, window.__plotdesk_shared.vue.toDisplayString(_.title), 9, A))), 128))
+                  ], 40, F)
                 ])
               ]))), 128))
             ]))
@@ -129,7 +132,7 @@ const y = { class: "kanban" }, g = { class: "kanban__header" }, b = ["disabled"]
       ])
     ]));
   }
-}, A = /* @__PURE__ */ m(L, [["__scopeId", "data-v-67eb447e"]]);
+}, R = /* @__PURE__ */ f(K, [["__scopeId", "data-v-35f92d87"]]);
 export {
-  A as default
+  R as default
 };

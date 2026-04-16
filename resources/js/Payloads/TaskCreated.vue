@@ -1,9 +1,13 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const task = computed(() => props.payload?.results?.task || {});
 
@@ -20,6 +24,16 @@ const statusStyle = computed(() => ({
     blocked: 'pd-chip--danger',
     done: 'pd-chip--success',
 })[task.value.status] || 'pd-chip--muted');
+
+const priorityLabel = computed(() => {
+    const map = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+    return $t(map[task.value.priority] || task.value.priority || '');
+});
+
+const statusLabel = computed(() => {
+    const map = { open: 'Open', in_progress: 'In Progress', blocked: 'Blocked', done: 'Done' };
+    return $t(map[task.value.status] || task.value.status || '');
+});
 </script>
 
 <template>
@@ -37,9 +51,9 @@ const statusStyle = computed(() => ({
             </div>
             <p v-if="task.description" class="task-card__description">{{ task.description }}</p>
             <div class="task-card__meta">
-                <span v-if="task.priority" class="pd-chip" :class="priorityStyle">{{ task.priority }}</span>
-                <span v-if="task.status" class="pd-chip" :class="statusStyle">{{ task.status }}</span>
-                <span v-if="task.due_date" class="task-card__due">Due {{ task.due_date }}</span>
+                <span v-if="task.priority" class="pd-chip" :class="priorityStyle">{{ priorityLabel }}</span>
+                <span v-if="task.status" class="pd-chip" :class="statusStyle">{{ statusLabel }}</span>
+                <span v-if="task.due_date" class="task-card__due">{{ $t('Due {date}', { date: task.due_date }) }}</span>
                 <span v-if="task.assignee" class="task-card__assignee">@{{ task.assignee }}</span>
             </div>
         </div>

@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
 
 const note = computed(() => props.payload?.results?.note || {});

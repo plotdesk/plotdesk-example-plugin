@@ -1,23 +1,25 @@
-import { _ as l } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const n = { class: "summary-card" }, u = { class: "summary-card__header" }, i = {
+import { u as n } from "../chunks/translator-CzLc3Cda.js";
+import { _ as u } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const i = { class: "summary-card" }, c = { class: "summary-card__header" }, w = { class: "summary-card__label" }, p = {
   key: 0,
   class: "summary-card__title"
-}, c = {
+}, m = {
   key: 0,
   class: "summary-card__note-id"
-}, p = { class: "summary-card__text" }, w = {
+}, v = { class: "summary-card__text" }, h = {
   __name: "NoteSummary",
   props: {
-    payload: { type: Object, default: () => ({}) }
+    payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) }
   },
-  setup(_) {
-    const a = _, o = window.__plotdesk_shared.vue.computed(() => {
+  setup(r) {
+    const t = r, e = n(window.__plotdesk_shared.vue.computed(() => t.translations)), o = window.__plotdesk_shared.vue.computed(() => {
       var d;
-      return ((d = a.payload) == null ? void 0 : d.results) || {};
-    }), r = window.__plotdesk_shared.vue.computed(() => o.value.summary || ""), t = window.__plotdesk_shared.vue.computed(() => o.value.note_id), s = window.__plotdesk_shared.vue.computed(() => o.value.title || "");
-    return (d, e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", n, [
-      window.__plotdesk_shared.vue.createElementVNode("div", u, [
-        e[1] || (e[1] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "summary-card__icon" }, [
+      return ((d = t.payload) == null ? void 0 : d.results) || {};
+    }), l = window.__plotdesk_shared.vue.computed(() => o.value.summary || ""), s = window.__plotdesk_shared.vue.computed(() => o.value.note_id), _ = window.__plotdesk_shared.vue.computed(() => o.value.title || "");
+    return (d, a) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", i, [
+      window.__plotdesk_shared.vue.createElementVNode("div", c, [
+        a[0] || (a[0] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "summary-card__icon" }, [
           window.__plotdesk_shared.vue.createElementVNode("svg", {
             viewBox: "0 0 24 24",
             width: "18",
@@ -32,17 +34,17 @@ const n = { class: "summary-card" }, u = { class: "summary-card__header" }, i = 
           ])
         ], -1)),
         window.__plotdesk_shared.vue.createElementVNode("div", null, [
-          e[0] || (e[0] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "summary-card__label" }, "AI Summary", -1)),
-          s.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", i, [
-            t.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", c, "Note #" + window.__plotdesk_shared.vue.toDisplayString(t.value), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-            window.__plotdesk_shared.vue.createTextVNode(" " + window.__plotdesk_shared.vue.toDisplayString(s.value), 1)
+          window.__plotdesk_shared.vue.createElementVNode("div", w, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(e)("AI Summary")), 1),
+          _.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", p, [
+            s.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", m, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(e)("Note #{id}", { id: s.value })), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
+            window.__plotdesk_shared.vue.createTextVNode(" " + window.__plotdesk_shared.vue.toDisplayString(_.value), 1)
           ])) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
         ])
       ]),
-      window.__plotdesk_shared.vue.createElementVNode("p", p, window.__plotdesk_shared.vue.toDisplayString(r.value || "No summary available."), 1)
+      window.__plotdesk_shared.vue.createElementVNode("p", v, window.__plotdesk_shared.vue.toDisplayString(l.value || window.__plotdesk_shared.vue.unref(e)("No summary available.")), 1)
     ]));
   }
-}, v = /* @__PURE__ */ l(w, [["__scopeId", "data-v-4ec83602"]]);
+}, N = /* @__PURE__ */ u(h, [["__scopeId", "data-v-437ddfb0"]]);
 export {
-  v as default
+  N as default
 };

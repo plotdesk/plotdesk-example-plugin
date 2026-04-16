@@ -1,21 +1,26 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const notes = computed(() => props.payload?.results?.notes || []);
 const count = computed(() => props.payload?.results?.count || notes.value.length);
+const countLabel = computed(() => `${count.value} ${count.value === 1 ? $t('note') : $t('notes')}`);
 </script>
 
 <template>
     <div class="note-list">
         <div class="note-list__header">
-            <span>Example Notes</span>
-            <span class="note-list__count">{{ count }} {{ count === 1 ? 'note' : 'notes' }}</span>
+            <span>{{ $t('Example Notes') }}</span>
+            <span class="note-list__count">{{ countLabel }}</span>
         </div>
-        <div v-if="notes.length === 0" class="note-list__empty">No notes found.</div>
+        <div v-if="notes.length === 0" class="note-list__empty">{{ $t('No notes found.') }}</div>
         <ul v-else class="note-list__items">
             <li v-for="note in notes" :key="note.id" class="note-list__item">
                 <div class="note-list__title"><span class="note-list__id">#{{ note.id }}</span> {{ note.title }}</div>

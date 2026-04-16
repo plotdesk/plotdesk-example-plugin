@@ -1,20 +1,23 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
     translations: { type: Object, default: () => ({}) },
 });
 
+const $t = useTranslator(computed(() => props.translations));
+
 const data = computed(() => props.payload?.data || {});
 
 const stats = computed(() => {
     const s = data.value.stats || {};
     return [
-        { key: 'open_tasks', label: 'Open Tasks', value: s.open_tasks ?? 0, tone: 'brand' },
-        { key: 'completed_tasks', label: 'Completed', value: s.completed_tasks ?? 0, tone: 'success' },
-        { key: 'notes', label: 'Notes', value: s.notes ?? 0, tone: 'info' },
-        { key: 'webhooks', label: 'Webhooks 24h', value: s.webhook_events_24h ?? 0, tone: 'warning' },
+        { key: 'open_tasks', label: $t('Open Tasks'), value: s.open_tasks ?? 0, tone: 'brand' },
+        { key: 'completed_tasks', label: $t('Completed'), value: s.completed_tasks ?? 0, tone: 'success' },
+        { key: 'notes', label: $t('Notes'), value: s.notes ?? 0, tone: 'info' },
+        { key: 'webhooks', label: $t('Webhooks 24h'), value: s.webhook_events_24h ?? 0, tone: 'warning' },
     ];
 });
 
@@ -42,8 +45,20 @@ const statusStyle = status => {
     return map[status] || 'pd-chip--muted';
 };
 
+const priorityLabel = priority => {
+    const map = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+    return $t(map[priority] || priority);
+};
+
+const statusLabel = status => {
+    const map = { open: 'Open', in_progress: 'In Progress', blocked: 'Blocked', done: 'Done' };
+    return $t(map[status] || status);
+};
+
 const formatDate = iso => {
-    if (!iso) return '';
+    if (!iso) {
+        return '';
+    }
     try {
         return new Date(iso).toLocaleString();
     } catch {
@@ -56,12 +71,12 @@ const formatDate = iso => {
     <div class="dashboard">
         <header class="dashboard__header">
             <div>
-                <h1 class="dashboard__title">Example Dashboard</h1>
-                <p class="dashboard__subtitle">Overview of tasks, notes and activity from the plotdesk example plugin.</p>
+                <h1 class="dashboard__title">{{ $t('Example Dashboard') }}</h1>
+                <p class="dashboard__subtitle">{{ $t('Overview of tasks, notes and activity from the plotdesk example plugin.') }}</p>
             </div>
             <div class="dashboard__header-actions">
-                <a :href="route('plugin.plotdesk-example-plugin.tasks.index')" class="pd-btn pd-btn--primary">Manage Tasks</a>
-                <a :href="route('plugin.plotdesk-example-plugin.notes.index')" class="pd-btn pd-btn--secondary">Open Notebook</a>
+                <a :href="route('plugin.plotdesk-example-plugin.tasks.index')" class="pd-btn pd-btn--primary">{{ $t('Manage Tasks') }}</a>
+                <a :href="route('plugin.plotdesk-example-plugin.notes.index')" class="pd-btn pd-btn--secondary">{{ $t('Open Notebook') }}</a>
             </div>
         </header>
 
@@ -80,17 +95,17 @@ const formatDate = iso => {
         <section class="dashboard__grid">
             <div class="pd-card">
                 <div class="pd-card__header">
-                    <h2 class="pd-card__title">Recent Tasks</h2>
+                    <h2 class="pd-card__title">{{ $t('Recent Tasks') }}</h2>
                 </div>
-                <div v-if="recentTasks.length === 0" class="pd-empty">No tasks yet.</div>
+                <div v-if="recentTasks.length === 0" class="pd-empty">{{ $t('No tasks yet.') }}</div>
                 <ul v-else class="pd-list">
                     <li v-for="task in recentTasks" :key="task.id" class="pd-list__item">
                         <div class="pd-list__main">
                             <div class="pd-list__title">{{ task.title }}</div>
                             <div class="pd-list__meta">
-                                <span class="pd-chip" :class="priorityStyle(task.priority)">{{ task.priority }}</span>
-                                <span class="pd-chip" :class="statusStyle(task.status)">{{ task.status }}</span>
-                                <span v-if="task.due_date" class="pd-list__date">Due {{ task.due_date }}</span>
+                                <span class="pd-chip" :class="priorityStyle(task.priority)">{{ priorityLabel(task.priority) }}</span>
+                                <span class="pd-chip" :class="statusStyle(task.status)">{{ statusLabel(task.status) }}</span>
+                                <span v-if="task.due_date" class="pd-list__date">{{ $t('Due {date}', { date: task.due_date }) }}</span>
                             </div>
                         </div>
                     </li>
@@ -99,15 +114,15 @@ const formatDate = iso => {
 
             <div class="pd-card">
                 <div class="pd-card__header">
-                    <h2 class="pd-card__title">Recent Notes</h2>
+                    <h2 class="pd-card__title">{{ $t('Recent Notes') }}</h2>
                 </div>
-                <div v-if="recentNotes.length === 0" class="pd-empty">No notes yet.</div>
+                <div v-if="recentNotes.length === 0" class="pd-empty">{{ $t('No notes yet.') }}</div>
                 <ul v-else class="pd-list">
                     <li v-for="note in recentNotes" :key="note.id" class="pd-list__item">
                         <div class="pd-list__main">
                             <div class="pd-list__title">{{ note.title }}</div>
                             <div class="pd-list__meta">
-                                <span v-if="note.has_summary" class="pd-chip pd-chip--success">summary</span>
+                                <span v-if="note.has_summary" class="pd-chip pd-chip--success">{{ $t('summary') }}</span>
                                 <span class="pd-list__date">{{ formatDate(note.updated_at) }}</span>
                             </div>
                         </div>
@@ -117,14 +132,14 @@ const formatDate = iso => {
 
             <div class="pd-card pd-card--wide">
                 <div class="pd-card__header">
-                    <h2 class="pd-card__title">Recent Activity</h2>
+                    <h2 class="pd-card__title">{{ $t('Recent Activity') }}</h2>
                 </div>
-                <div v-if="recentActivity.length === 0" class="pd-empty">No activity recorded yet.</div>
+                <div v-if="recentActivity.length === 0" class="pd-empty">{{ $t('No activity recorded yet.') }}</div>
                 <ul v-else class="pd-timeline">
                     <li v-for="entry in recentActivity" :key="entry.id" class="pd-timeline__item">
                         <span class="pd-timeline__dot"></span>
                         <div class="pd-timeline__content">
-                            <div class="pd-timeline__event">{{ entry.event_name }}</div>
+                            <div class="pd-timeline__event">{{ $t(entry.event_name) }}</div>
                             <div class="pd-timeline__date">{{ formatDate(entry.created_at) }}</div>
                         </div>
                     </li>
@@ -348,7 +363,7 @@ const formatDate = iso => {
     border: 1px solid transparent;
     cursor: pointer;
     text-decoration: none;
-    transition: background 150ms, color 150ms, border-color 150ms;
+    transition: background 150ms, color 150ms, border-color 150ms, filter 150ms;
 }
 
 .pd-btn--primary {
@@ -357,7 +372,7 @@ const formatDate = iso => {
 }
 
 .pd-btn--primary:hover {
-    background: #081f66;
+    filter: brightness(0.92);
 }
 
 .pd-btn--secondary {

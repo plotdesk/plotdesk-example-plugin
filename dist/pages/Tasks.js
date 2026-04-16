@@ -1,201 +1,202 @@
-import { _ as h } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const m = { class: "tasks" }, E = { class: "tasks__header" }, V = { class: "pd-form__row" }, b = { class: "pd-form__label" }, N = { class: "pd-form__row" }, y = { class: "pd-form__label" }, g = { class: "pd-form__row pd-form__row--split" }, f = { class: "pd-form__label" }, S = ["value"], D = { class: "pd-form__label" }, B = ["value"], x = { class: "pd-form__label" }, C = { class: "pd-form__actions" }, T = ["disabled"], M = { class: "pd-card" }, O = {
+import { u as y } from "../chunks/translator-CzLc3Cda.js";
+import { _ as E } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const b = { class: "tasks" }, V = { class: "tasks__header" }, f = { class: "tasks__title" }, N = { class: "tasks__subtitle" }, D = { class: "pd-form__row" }, S = { class: "pd-form__label" }, B = ["placeholder"], x = { class: "pd-form__row" }, C = { class: "pd-form__label" }, T = ["placeholder"], M = { class: "pd-form__row pd-form__row--split" }, L = { class: "pd-form__label" }, O = ["value"], U = { class: "pd-form__label" }, F = ["value"], P = { class: "pd-form__label" }, $ = { class: "pd-form__actions" }, I = ["disabled"], j = { class: "pd-card" }, z = {
   key: 0,
   class: "pd-empty"
-}, U = {
+}, H = {
   key: 1,
   class: "pd-table"
-}, F = ["checked", "onChange"], L = { class: "pd-table__title" }, $ = {
+}, q = ["checked", "onChange"], W = { class: "pd-table__title" }, A = {
   key: 0,
   class: "pd-table__subtitle"
-}, P = ["onClick"], j = {
+}, G = ["onClick"], J = {
   __name: "Tasks",
   props: {
     payload: { type: Object, default: () => ({}) },
     translations: { type: Object, default: () => ({}) }
   },
-  setup(n) {
-    const a = n, _ = window.__plotdesk_shared.vue.computed(() => {
-      var d, t;
-      return ((t = (d = a.payload) == null ? void 0 : d.data) == null ? void 0 : t.tasks) || [];
-    }), s = window.__plotdesk_shared.vue.ref(!1), o = window.__plotdesk_shared.vue.ref({
+  setup(r) {
+    const n = r, d = y(window.__plotdesk_shared.vue.computed(() => n.translations)), a = window.__plotdesk_shared.vue.computed(() => {
+      var o, t;
+      return ((t = (o = n.payload) == null ? void 0 : o.data) == null ? void 0 : t.tasks) || [];
+    }), l = window.__plotdesk_shared.vue.ref(!1), s = window.__plotdesk_shared.vue.ref({
       title: "",
       description: "",
       priority: "medium",
       status: "open",
       due_date: ""
-    }), l = window.__plotdesk_shared.vue.ref(!1), r = () => {
-      l.value || (l.value = !0, window.__plotdesk_shared.inertia.router.post(route("plugin.plotdesk-example-plugin.tasks.store"), o.value, {
+    }), _ = window.__plotdesk_shared.vue.ref(!1), i = () => {
+      _.value || (_.value = !0, window.__plotdesk_shared.inertia.router.post(route("plugin.plotdesk-example-plugin.tasks.store"), s.value, {
         preserveScroll: !0,
         onFinish: () => {
-          l.value = !1, s.value = !1, o.value = { title: "", description: "", priority: "medium", status: "open", due_date: "" };
+          _.value = !1, l.value = !1, s.value = { title: "", description: "", priority: "medium", status: "open", due_date: "" };
         }
       }));
-    }, i = (d) => {
+    }, p = (o) => {
       window.__plotdesk_shared.inertia.router.put(
-        route("plugin.plotdesk-example-plugin.tasks.update", { task: d.id }),
-        { status: d.status === "done" ? "open" : "done" },
+        route("plugin.plotdesk-example-plugin.tasks.update", { task: o.id }),
+        { status: o.status === "done" ? "open" : "done" },
         { preserveScroll: !0 }
       );
-    }, p = (d) => {
-      confirm(`Delete task "${d.title}"?`) && window.__plotdesk_shared.inertia.router.delete(route("plugin.plotdesk-example-plugin.tasks.destroy", { task: d.id }), { preserveScroll: !0 });
-    }, u = [
-      { value: "low", label: "Low" },
-      { value: "medium", label: "Medium" },
-      { value: "high", label: "High" },
-      { value: "urgent", label: "Urgent" }
-    ], w = [
-      { value: "open", label: "Open" },
-      { value: "in_progress", label: "In Progress" },
-      { value: "blocked", label: "Blocked" },
-      { value: "done", label: "Done" }
-    ], v = (d) => ({
+    }, u = (o) => {
+      confirm(d('Delete task "{title}"?', { title: o.title })) && window.__plotdesk_shared.inertia.router.delete(route("plugin.plotdesk-example-plugin.tasks.destroy", { task: o.id }), { preserveScroll: !0 });
+    }, w = window.__plotdesk_shared.vue.computed(() => [
+      { value: "low", label: d("Low") },
+      { value: "medium", label: d("Medium") },
+      { value: "high", label: d("High") },
+      { value: "urgent", label: d("Urgent") }
+    ]), v = window.__plotdesk_shared.vue.computed(() => [
+      { value: "open", label: d("Open") },
+      { value: "in_progress", label: d("In Progress") },
+      { value: "blocked", label: d("Blocked") },
+      { value: "done", label: d("Done") }
+    ]), h = (o) => ({
       low: "pd-chip--info",
       medium: "pd-chip--brand",
       high: "pd-chip--warning",
       urgent: "pd-chip--danger"
-    })[d] || "pd-chip--muted", c = (d) => ({
+    })[o] || "pd-chip--muted", c = (o) => ({
       open: "pd-chip--muted",
       in_progress: "pd-chip--brand",
       blocked: "pd-chip--danger",
       done: "pd-chip--success"
-    })[d] || "pd-chip--muted";
-    return (d, t) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", m, [
-      window.__plotdesk_shared.vue.createElementVNode("header", E, [
-        t[6] || (t[6] = window.__plotdesk_shared.vue.createElementVNode("div", null, [
-          window.__plotdesk_shared.vue.createElementVNode("h1", { class: "tasks__title" }, "Example Tasks"),
-          window.__plotdesk_shared.vue.createElementVNode("p", { class: "tasks__subtitle" }, "Manage tasks managed by the plotdesk example plugin.")
-        ], -1)),
+    })[o] || "pd-chip--muted", k = (o) => d({ low: "Low", medium: "Medium", high: "High", urgent: "Urgent" }[o] || o), m = (o) => d({ open: "Open", in_progress: "In Progress", blocked: "Blocked", done: "Done" }[o] || o);
+    return (o, t) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", b, [
+      window.__plotdesk_shared.vue.createElementVNode("header", V, [
+        window.__plotdesk_shared.vue.createElementVNode("div", null, [
+          window.__plotdesk_shared.vue.createElementVNode("h1", f, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Example Tasks")), 1),
+          window.__plotdesk_shared.vue.createElementVNode("p", N, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Manage tasks managed by the plotdesk example plugin.")), 1)
+        ]),
         window.__plotdesk_shared.vue.createElementVNode("button", {
           type: "button",
           class: "pd-btn pd-btn--primary",
-          onClick: t[0] || (t[0] = (e) => s.value = !s.value)
-        }, window.__plotdesk_shared.vue.toDisplayString(s.value ? "Cancel" : "New Task"), 1)
+          onClick: t[0] || (t[0] = (e) => l.value = !l.value)
+        }, window.__plotdesk_shared.vue.toDisplayString(l.value ? window.__plotdesk_shared.vue.unref(d)("Cancel") : window.__plotdesk_shared.vue.unref(d)("New Task")), 1)
       ]),
-      s.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("form", {
+      l.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("form", {
         key: 0,
         class: "pd-card pd-form",
-        onSubmit: window.__plotdesk_shared.vue.withModifiers(r, ["prevent"])
+        onSubmit: window.__plotdesk_shared.vue.withModifiers(i, ["prevent"])
       }, [
-        window.__plotdesk_shared.vue.createElementVNode("div", V, [
-          window.__plotdesk_shared.vue.createElementVNode("label", b, [
-            t[7] || (t[7] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Title", -1)),
+        window.__plotdesk_shared.vue.createElementVNode("div", D, [
+          window.__plotdesk_shared.vue.createElementVNode("label", S, [
+            window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Title")), 1),
             window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("input", {
-              "onUpdate:modelValue": t[1] || (t[1] = (e) => o.value.title = e),
+              "onUpdate:modelValue": t[1] || (t[1] = (e) => s.value.title = e),
               type: "text",
               required: "",
               class: "pd-input",
-              placeholder: "What needs to be done?"
-            }, null, 512), [
-              [window.__plotdesk_shared.vue.vModelText, o.value.title]
+              placeholder: window.__plotdesk_shared.vue.unref(d)("What needs to be done?")
+            }, null, 8, B), [
+              [window.__plotdesk_shared.vue.vModelText, s.value.title]
             ])
           ])
         ]),
-        window.__plotdesk_shared.vue.createElementVNode("div", N, [
-          window.__plotdesk_shared.vue.createElementVNode("label", y, [
-            t[8] || (t[8] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Description", -1)),
+        window.__plotdesk_shared.vue.createElementVNode("div", x, [
+          window.__plotdesk_shared.vue.createElementVNode("label", C, [
+            window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Description")), 1),
             window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("textarea", {
-              "onUpdate:modelValue": t[2] || (t[2] = (e) => o.value.description = e),
+              "onUpdate:modelValue": t[2] || (t[2] = (e) => s.value.description = e),
               class: "pd-input",
               rows: "2",
-              placeholder: "Optional details..."
-            }, null, 512), [
-              [window.__plotdesk_shared.vue.vModelText, o.value.description]
+              placeholder: window.__plotdesk_shared.vue.unref(d)("Optional details...")
+            }, null, 8, T), [
+              [window.__plotdesk_shared.vue.vModelText, s.value.description]
             ])
           ])
         ]),
-        window.__plotdesk_shared.vue.createElementVNode("div", g, [
-          window.__plotdesk_shared.vue.createElementVNode("label", f, [
-            t[9] || (t[9] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Priority", -1)),
+        window.__plotdesk_shared.vue.createElementVNode("div", M, [
+          window.__plotdesk_shared.vue.createElementVNode("label", L, [
+            window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Priority")), 1),
             window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("select", {
-              "onUpdate:modelValue": t[3] || (t[3] = (e) => o.value.priority = e),
+              "onUpdate:modelValue": t[3] || (t[3] = (e) => s.value.priority = e),
               class: "pd-input"
             }, [
-              (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(u, (e) => window.__plotdesk_shared.vue.createElementVNode("option", {
+              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(w.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("option", {
                 key: e.value,
                 value: e.value
-              }, window.__plotdesk_shared.vue.toDisplayString(e.label), 9, S)), 64))
+              }, window.__plotdesk_shared.vue.toDisplayString(e.label), 9, O))), 128))
             ], 512), [
-              [window.__plotdesk_shared.vue.vModelSelect, o.value.priority]
+              [window.__plotdesk_shared.vue.vModelSelect, s.value.priority]
             ])
           ]),
-          window.__plotdesk_shared.vue.createElementVNode("label", D, [
-            t[10] || (t[10] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Status", -1)),
+          window.__plotdesk_shared.vue.createElementVNode("label", U, [
+            window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Status")), 1),
             window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("select", {
-              "onUpdate:modelValue": t[4] || (t[4] = (e) => o.value.status = e),
+              "onUpdate:modelValue": t[4] || (t[4] = (e) => s.value.status = e),
               class: "pd-input"
             }, [
-              (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(w, (e) => window.__plotdesk_shared.vue.createElementVNode("option", {
+              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(v.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("option", {
                 key: e.value,
                 value: e.value
-              }, window.__plotdesk_shared.vue.toDisplayString(e.label), 9, B)), 64))
+              }, window.__plotdesk_shared.vue.toDisplayString(e.label), 9, F))), 128))
             ], 512), [
-              [window.__plotdesk_shared.vue.vModelSelect, o.value.status]
+              [window.__plotdesk_shared.vue.vModelSelect, s.value.status]
             ])
           ]),
-          window.__plotdesk_shared.vue.createElementVNode("label", x, [
-            t[11] || (t[11] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Due Date", -1)),
+          window.__plotdesk_shared.vue.createElementVNode("label", P, [
+            window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Due Date")), 1),
             window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("input", {
-              "onUpdate:modelValue": t[5] || (t[5] = (e) => o.value.due_date = e),
+              "onUpdate:modelValue": t[5] || (t[5] = (e) => s.value.due_date = e),
               type: "date",
               class: "pd-input"
             }, null, 512), [
-              [window.__plotdesk_shared.vue.vModelText, o.value.due_date]
+              [window.__plotdesk_shared.vue.vModelText, s.value.due_date]
             ])
           ])
         ]),
-        window.__plotdesk_shared.vue.createElementVNode("div", C, [
+        window.__plotdesk_shared.vue.createElementVNode("div", $, [
           window.__plotdesk_shared.vue.createElementVNode("button", {
             type: "submit",
             class: "pd-btn pd-btn--primary",
-            disabled: l.value
-          }, window.__plotdesk_shared.vue.toDisplayString(l.value ? "Saving..." : "Create Task"), 9, T)
+            disabled: _.value
+          }, window.__plotdesk_shared.vue.toDisplayString(_.value ? window.__plotdesk_shared.vue.unref(d)("Saving...") : window.__plotdesk_shared.vue.unref(d)("Create Task")), 9, I)
         ])
       ], 32)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-      window.__plotdesk_shared.vue.createElementVNode("section", M, [
-        _.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", O, "No tasks yet. Create one to get started.")) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("table", U, [
-          t[12] || (t[12] = window.__plotdesk_shared.vue.createElementVNode("thead", null, [
+      window.__plotdesk_shared.vue.createElementVNode("section", j, [
+        a.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", z, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("No tasks yet. Create one to get started.")), 1)) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("table", H, [
+          window.__plotdesk_shared.vue.createElementVNode("thead", null, [
             window.__plotdesk_shared.vue.createElementVNode("tr", null, [
-              window.__plotdesk_shared.vue.createElementVNode("th"),
-              window.__plotdesk_shared.vue.createElementVNode("th", null, "Title"),
-              window.__plotdesk_shared.vue.createElementVNode("th", null, "Priority"),
-              window.__plotdesk_shared.vue.createElementVNode("th", null, "Status"),
-              window.__plotdesk_shared.vue.createElementVNode("th", null, "Due"),
-              window.__plotdesk_shared.vue.createElementVNode("th")
+              t[6] || (t[6] = window.__plotdesk_shared.vue.createElementVNode("th", null, null, -1)),
+              window.__plotdesk_shared.vue.createElementVNode("th", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Title")), 1),
+              window.__plotdesk_shared.vue.createElementVNode("th", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Priority")), 1),
+              window.__plotdesk_shared.vue.createElementVNode("th", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Status")), 1),
+              window.__plotdesk_shared.vue.createElementVNode("th", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Due Date")), 1),
+              t[7] || (t[7] = window.__plotdesk_shared.vue.createElementVNode("th", null, null, -1))
             ])
-          ], -1)),
+          ]),
           window.__plotdesk_shared.vue.createElementVNode("tbody", null, [
-            (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(_.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("tr", {
+            (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(a.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("tr", {
               key: e.id
             }, [
               window.__plotdesk_shared.vue.createElementVNode("td", null, [
                 window.__plotdesk_shared.vue.createElementVNode("input", {
                   type: "checkbox",
                   checked: e.status === "done",
-                  onChange: (k) => i(e)
-                }, null, 40, F)
+                  onChange: (g) => p(e)
+                }, null, 40, q)
               ]),
               window.__plotdesk_shared.vue.createElementVNode("td", null, [
-                window.__plotdesk_shared.vue.createElementVNode("div", L, window.__plotdesk_shared.vue.toDisplayString(e.title), 1),
-                e.description ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", $, window.__plotdesk_shared.vue.toDisplayString(e.description), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
+                window.__plotdesk_shared.vue.createElementVNode("div", W, window.__plotdesk_shared.vue.toDisplayString(e.title), 1),
+                e.description ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", A, window.__plotdesk_shared.vue.toDisplayString(e.description), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
               ]),
               window.__plotdesk_shared.vue.createElementVNode("td", null, [
                 window.__plotdesk_shared.vue.createElementVNode("span", {
-                  class: window.__plotdesk_shared.vue.normalizeClass(["pd-chip", v(e.priority)])
-                }, window.__plotdesk_shared.vue.toDisplayString(e.priority), 3)
+                  class: window.__plotdesk_shared.vue.normalizeClass(["pd-chip", h(e.priority)])
+                }, window.__plotdesk_shared.vue.toDisplayString(k(e.priority)), 3)
               ]),
               window.__plotdesk_shared.vue.createElementVNode("td", null, [
                 window.__plotdesk_shared.vue.createElementVNode("span", {
                   class: window.__plotdesk_shared.vue.normalizeClass(["pd-chip", c(e.status)])
-                }, window.__plotdesk_shared.vue.toDisplayString(e.status), 3)
+                }, window.__plotdesk_shared.vue.toDisplayString(m(e.status)), 3)
               ]),
               window.__plotdesk_shared.vue.createElementVNode("td", null, window.__plotdesk_shared.vue.toDisplayString(e.due_date || "—"), 1),
               window.__plotdesk_shared.vue.createElementVNode("td", null, [
                 window.__plotdesk_shared.vue.createElementVNode("button", {
                   type: "button",
                   class: "pd-btn pd-btn--ghost pd-btn--danger",
-                  onClick: (k) => p(e)
-                }, "Delete", 8, P)
+                  onClick: (g) => u(e)
+                }, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(d)("Delete")), 9, G)
               ])
             ]))), 128))
           ])
@@ -203,7 +204,7 @@ const m = { class: "tasks" }, E = { class: "tasks__header" }, V = { class: "pd-f
       ])
     ]));
   }
-}, I = /* @__PURE__ */ h(j, [["__scopeId", "data-v-e70f5a44"]]);
+}, R = /* @__PURE__ */ E(J, [["__scopeId", "data-v-e506a397"]]);
 export {
-  I as default
+  R as default
 };

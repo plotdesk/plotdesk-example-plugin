@@ -1,55 +1,57 @@
-import { _ as a } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const i = { class: "note-list" }, r = { class: "note-list__header" }, p = { class: "note-list__count" }, w = {
+import { u as i } from "../chunks/translator-CzLc3Cda.js";
+import { _ as p } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const w = { class: "note-list" }, u = { class: "note-list__header" }, c = { class: "note-list__count" }, k = {
   key: 0,
   class: "note-list__empty"
-}, c = {
+}, h = {
   key: 1,
   class: "note-list__items"
-}, u = { class: "note-list__title" }, k = { class: "note-list__id" }, h = {
+}, v = { class: "note-list__title" }, m = { class: "note-list__id" }, y = {
   key: 0,
   class: "note-list__preview"
-}, v = {
+}, B = {
   key: 1,
   class: "note-list__tags"
-}, m = {
+}, E = {
   __name: "NoteList",
   props: {
-    payload: { type: Object, default: () => ({}) }
+    payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) }
   },
-  setup(n) {
-    const _ = n, s = window.__plotdesk_shared.vue.computed(() => {
-      var o, e;
-      return ((e = (o = _.payload) == null ? void 0 : o.results) == null ? void 0 : e.notes) || [];
-    }), d = window.__plotdesk_shared.vue.computed(() => {
-      var o, e;
-      return ((e = (o = _.payload) == null ? void 0 : o.results) == null ? void 0 : e.count) || s.value.length;
-    });
-    return (o, e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", i, [
-      window.__plotdesk_shared.vue.createElementVNode("div", r, [
-        e[0] || (e[0] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Example Notes", -1)),
-        window.__plotdesk_shared.vue.createElementVNode("span", p, window.__plotdesk_shared.vue.toDisplayString(d.value) + " " + window.__plotdesk_shared.vue.toDisplayString(d.value === 1 ? "note" : "notes"), 1)
+  setup(a) {
+    const _ = a, s = i(window.__plotdesk_shared.vue.computed(() => _.translations)), d = window.__plotdesk_shared.vue.computed(() => {
+      var t, o;
+      return ((o = (t = _.payload) == null ? void 0 : t.results) == null ? void 0 : o.notes) || [];
+    }), l = window.__plotdesk_shared.vue.computed(() => {
+      var t, o;
+      return ((o = (t = _.payload) == null ? void 0 : t.results) == null ? void 0 : o.count) || d.value.length;
+    }), r = window.__plotdesk_shared.vue.computed(() => `${l.value} ${l.value === 1 ? s("note") : s("notes")}`);
+    return (t, o) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", w, [
+      window.__plotdesk_shared.vue.createElementVNode("div", u, [
+        window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(s)("Example Notes")), 1),
+        window.__plotdesk_shared.vue.createElementVNode("span", c, window.__plotdesk_shared.vue.toDisplayString(r.value), 1)
       ]),
-      s.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", w, "No notes found.")) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("ul", c, [
-        (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(s.value, (t) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("li", {
-          key: t.id,
+      d.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", k, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(s)("No notes found.")), 1)) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("ul", h, [
+        (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(d.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("li", {
+          key: e.id,
           class: "note-list__item"
         }, [
-          window.__plotdesk_shared.vue.createElementVNode("div", u, [
-            window.__plotdesk_shared.vue.createElementVNode("span", k, "#" + window.__plotdesk_shared.vue.toDisplayString(t.id), 1),
-            window.__plotdesk_shared.vue.createTextVNode(" " + window.__plotdesk_shared.vue.toDisplayString(t.title), 1)
+          window.__plotdesk_shared.vue.createElementVNode("div", v, [
+            window.__plotdesk_shared.vue.createElementVNode("span", m, "#" + window.__plotdesk_shared.vue.toDisplayString(e.id), 1),
+            window.__plotdesk_shared.vue.createTextVNode(" " + window.__plotdesk_shared.vue.toDisplayString(e.title), 1)
           ]),
-          t.preview ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("p", h, window.__plotdesk_shared.vue.toDisplayString(t.preview), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-          (t.tags || []).length ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", v, [
-            (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(t.tags, (l) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", {
-              key: l,
+          e.preview ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("p", y, window.__plotdesk_shared.vue.toDisplayString(e.preview), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
+          (e.tags || []).length ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", B, [
+            (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(e.tags, (n) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", {
+              key: n,
               class: "pd-chip pd-chip--muted"
-            }, window.__plotdesk_shared.vue.toDisplayString(l), 1))), 128))
+            }, window.__plotdesk_shared.vue.toDisplayString(n), 1))), 128))
           ])) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
         ]))), 128))
       ]))
     ]));
   }
-}, y = /* @__PURE__ */ a(m, [["__scopeId", "data-v-30b5de1d"]]);
+}, f = /* @__PURE__ */ p(E, [["__scopeId", "data-v-a54a677a"]]);
 export {
-  y as default
+  f as default
 };

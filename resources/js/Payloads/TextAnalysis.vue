@@ -1,12 +1,17 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
 
+const $t = useTranslator(computed(() => props.translations));
+
 const results = computed(() => props.payload?.results || {});
-const sentiment = computed(() => results.value.sentiment || '—');
+const sentiment = computed(() => (results.value.sentiment || '').toLowerCase());
+const sentimentLabel = computed(() => sentiment.value ? $t(sentiment.value) : '—');
 const language = computed(() => results.value.language || '—');
 const topics = computed(() => results.value.topics || []);
 
@@ -17,26 +22,26 @@ const sentimentStyle = computed(() => {
         neutral: 'sent--neutral',
         mixed: 'sent--mixed',
     };
-    return map[(sentiment.value || '').toLowerCase()] || 'sent--neutral';
+    return map[sentiment.value] || 'sent--neutral';
 });
 </script>
 
 <template>
     <div class="analysis">
         <div class="analysis__header">
-            <span>Text Analysis</span>
+            <span>{{ $t('Text Analysis') }}</span>
         </div>
         <div class="analysis__grid">
             <div class="analysis__box">
-                <div class="analysis__label">Sentiment</div>
-                <div class="analysis__value" :class="sentimentStyle">{{ sentiment }}</div>
+                <div class="analysis__label">{{ $t('Sentiment') }}</div>
+                <div class="analysis__value" :class="sentimentStyle">{{ sentimentLabel }}</div>
             </div>
             <div class="analysis__box">
-                <div class="analysis__label">Language</div>
+                <div class="analysis__label">{{ $t('Language') }}</div>
                 <div class="analysis__value">{{ language }}</div>
             </div>
             <div class="analysis__box analysis__box--wide">
-                <div class="analysis__label">Topics</div>
+                <div class="analysis__label">{{ $t('Topics') }}</div>
                 <div v-if="topics.length === 0" class="analysis__value">—</div>
                 <div v-else class="analysis__topics">
                     <span v-for="topic in topics" :key="topic" class="pd-chip pd-chip--info">{{ topic }}</span>

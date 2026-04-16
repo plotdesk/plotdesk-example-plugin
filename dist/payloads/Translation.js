@@ -1,33 +1,34 @@
-import { _ as r } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const i = { class: "translation" }, u = { class: "translation__header" }, p = { class: "translation__langs" }, w = { class: "translation__body" }, c = { class: "translation__box" }, v = { class: "translation__text translation__text--muted" }, h = { class: "translation__box" }, k = { class: "translation__text" }, m = {
+import { u as r } from "../chunks/translator-CzLc3Cda.js";
+import { _ as i } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const u = { class: "translation" }, p = { class: "translation__header" }, c = { class: "translation__route" }, w = { class: "translation__grid" }, v = { class: "translation__pane" }, h = { class: "translation__label" }, k = { class: "translation__text" }, m = { class: "translation__pane translation__pane--target" }, g = { class: "translation__label" }, y = { class: "translation__text" }, E = {
   __name: "Translation",
   props: {
-    payload: { type: Object, default: () => ({}) }
+    payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) }
   },
-  setup(o) {
-    const a = o, t = window.__plotdesk_shared.vue.computed(() => {
+  setup(a) {
+    const o = a, t = r(window.__plotdesk_shared.vue.computed(() => o.translations)), e = window.__plotdesk_shared.vue.computed(() => {
       var s;
-      return ((s = a.payload) == null ? void 0 : s.results) || {};
-    }), d = window.__plotdesk_shared.vue.computed(() => t.value.source_language || "auto"), _ = window.__plotdesk_shared.vue.computed(() => t.value.target_language || "en"), n = window.__plotdesk_shared.vue.computed(() => t.value.source_text || ""), l = window.__plotdesk_shared.vue.computed(() => t.value.translation || "");
-    return (s, e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", i, [
-      window.__plotdesk_shared.vue.createElementVNode("div", u, [
-        e[0] || (e[0] = window.__plotdesk_shared.vue.createElementVNode("span", null, "Translation", -1)),
-        window.__plotdesk_shared.vue.createElementVNode("span", p, window.__plotdesk_shared.vue.toDisplayString(d.value) + " → " + window.__plotdesk_shared.vue.toDisplayString(_.value), 1)
+      return ((s = o.payload) == null ? void 0 : s.results) || {};
+    }), _ = window.__plotdesk_shared.vue.computed(() => e.value.source_text || ""), d = window.__plotdesk_shared.vue.computed(() => e.value.translated_text || ""), n = window.__plotdesk_shared.vue.computed(() => e.value.source_language || "—"), l = window.__plotdesk_shared.vue.computed(() => e.value.target_language || "—");
+    return (s, f) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", u, [
+      window.__plotdesk_shared.vue.createElementVNode("div", p, [
+        window.__plotdesk_shared.vue.createElementVNode("span", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Translation")), 1),
+        window.__plotdesk_shared.vue.createElementVNode("span", c, window.__plotdesk_shared.vue.toDisplayString(n.value) + " → " + window.__plotdesk_shared.vue.toDisplayString(l.value), 1)
       ]),
       window.__plotdesk_shared.vue.createElementVNode("div", w, [
-        window.__plotdesk_shared.vue.createElementVNode("div", c, [
-          e[1] || (e[1] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "translation__label" }, "Original", -1)),
-          window.__plotdesk_shared.vue.createElementVNode("p", v, window.__plotdesk_shared.vue.toDisplayString(n.value || "—"), 1)
+        window.__plotdesk_shared.vue.createElementVNode("div", v, [
+          window.__plotdesk_shared.vue.createElementVNode("div", h, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Original")), 1),
+          window.__plotdesk_shared.vue.createElementVNode("p", k, window.__plotdesk_shared.vue.toDisplayString(_.value || "—"), 1)
         ]),
-        e[3] || (e[3] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "translation__divider" }, null, -1)),
-        window.__plotdesk_shared.vue.createElementVNode("div", h, [
-          e[2] || (e[2] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "translation__label" }, "Translation", -1)),
-          window.__plotdesk_shared.vue.createElementVNode("p", k, window.__plotdesk_shared.vue.toDisplayString(l.value || "—"), 1)
+        window.__plotdesk_shared.vue.createElementVNode("div", m, [
+          window.__plotdesk_shared.vue.createElementVNode("div", g, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Translation")), 1),
+          window.__plotdesk_shared.vue.createElementVNode("p", y, window.__plotdesk_shared.vue.toDisplayString(d.value || "—"), 1)
         ])
       ])
     ]));
   }
-}, E = /* @__PURE__ */ r(m, [["__scopeId", "data-v-fd5c5a8e"]]);
+}, x = /* @__PURE__ */ i(E, [["__scopeId", "data-v-b6c6e88c"]]);
 export {
-  E as default
+  x as default
 };

@@ -1,9 +1,13 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const results = computed(() => props.payload?.results || {});
 const summary = computed(() => results.value.summary || '');
@@ -20,13 +24,13 @@ const title = computed(() => results.value.title || '');
                 </svg>
             </div>
             <div>
-                <div class="summary-card__label">AI Summary</div>
+                <div class="summary-card__label">{{ $t('AI Summary') }}</div>
                 <div v-if="title" class="summary-card__title">
-                    <span v-if="noteId" class="summary-card__note-id">Note #{{ noteId }}</span> {{ title }}
+                    <span v-if="noteId" class="summary-card__note-id">{{ $t('Note #{id}', { id: noteId }) }}</span> {{ title }}
                 </div>
             </div>
         </div>
-        <p class="summary-card__text">{{ summary || 'No summary available.' }}</p>
+        <p class="summary-card__text">{{ summary || $t('No summary available.') }}</p>
     </div>
 </template>
 

@@ -1,177 +1,178 @@
-import { _ as m } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const b = { class: "notebook" }, y = { class: "notebook__sidebar" }, E = { class: "notebook__sidebar-header" }, B = {
+import { u as y } from "../chunks/translator-CzLc3Cda.js";
+import { _ as b } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
+const f = { class: "notebook" }, E = { class: "notebook__sidebar" }, g = { class: "notebook__sidebar-header" }, B = { class: "notebook__title" }, N = {
   key: 0,
   class: "notebook__new"
-}, N = { class: "notebook__list" }, V = ["onClick"], g = { class: "notebook__list-title" }, f = { class: "notebook__list-meta" }, x = {
+}, V = ["placeholder"], S = ["placeholder"], D = ["placeholder"], x = { class: "notebook__list" }, C = ["onClick"], T = { class: "notebook__list-title" }, M = { class: "notebook__list-meta" }, U = {
   key: 0,
   class: "pd-chip pd-chip--success"
-}, S = {
+}, I = {
   key: 1,
   class: "notebook__empty"
-}, C = { class: "notebook__main" }, D = {
+}, $ = { class: "notebook__main" }, j = {
   key: 0,
   class: "notebook__placeholder"
-}, T = {
+}, F = {
   key: 1,
   class: "notebook__detail"
-}, M = { class: "notebook__detail-header" }, U = {
+}, L = { class: "notebook__detail-header" }, O = {
   key: 0,
   class: "notebook__detail-title"
-}, I = { class: "notebook__detail-actions" }, $ = {
+}, z = { class: "notebook__detail-actions" }, A = {
   key: 0,
   class: "notebook__summary"
-}, j = { class: "notebook__content" }, F = {
+}, W = { class: "notebook__content" }, q = {
   key: 0,
   class: "notebook__text"
-}, L = {
+}, G = {
   __name: "Notes",
   props: {
     payload: { type: Object, default: () => ({}) },
     translations: { type: Object, default: () => ({}) }
   },
-  setup(p) {
-    var u;
-    const w = p, a = window.__plotdesk_shared.vue.computed(() => {
-      var s, e;
-      return ((e = (s = w.payload) == null ? void 0 : s.data) == null ? void 0 : e.notes) || [];
-    }), i = window.__plotdesk_shared.vue.ref(((u = a.value[0]) == null ? void 0 : u.id) || null), o = window.__plotdesk_shared.vue.computed(() => a.value.find((s) => s.id === i.value) || null), _ = window.__plotdesk_shared.vue.ref(!1), d = window.__plotdesk_shared.vue.ref({ title: "", content: "", tags: "" }), l = window.__plotdesk_shared.vue.ref(!1), n = window.__plotdesk_shared.vue.ref({ title: "", content: "" }), c = () => {
-      d.value.title.trim() && window.__plotdesk_shared.inertia.router.post(route("plugin.plotdesk-example-plugin.notes.store"), {
-        title: d.value.title,
-        content: d.value.content,
-        tags: d.value.tags.split(",").map((s) => s.trim()).filter(Boolean)
+  setup(k) {
+    var w;
+    const p = k, t = y(window.__plotdesk_shared.vue.computed(() => p.translations)), i = window.__plotdesk_shared.vue.computed(() => {
+      var _, o;
+      return ((o = (_ = p.payload) == null ? void 0 : _.data) == null ? void 0 : o.notes) || [];
+    }), r = window.__plotdesk_shared.vue.ref(((w = i.value[0]) == null ? void 0 : w.id) || null), d = window.__plotdesk_shared.vue.computed(() => i.value.find((_) => _.id === r.value) || null), a = window.__plotdesk_shared.vue.ref(!1), s = window.__plotdesk_shared.vue.ref({ title: "", content: "", tags: "" }), l = window.__plotdesk_shared.vue.ref(!1), n = window.__plotdesk_shared.vue.ref({ title: "", content: "" }), v = () => {
+      s.value.title.trim() && window.__plotdesk_shared.inertia.router.post(route("plugin.plotdesk-example-plugin.notes.store"), {
+        title: s.value.title,
+        content: s.value.content,
+        tags: s.value.tags.split(",").map((_) => _.trim()).filter(Boolean)
       }, {
         preserveScroll: !0,
         onSuccess: () => {
-          d.value = { title: "", content: "", tags: "" }, _.value = !1;
+          s.value = { title: "", content: "", tags: "" }, a.value = !1;
         }
       });
-    }, k = () => {
-      o.value && (l.value = !0, n.value = { title: o.value.title, content: o.value.content });
-    }, v = () => {
-      o.value && window.__plotdesk_shared.inertia.router.put(route("plugin.plotdesk-example-plugin.notes.update", { note: o.value.id }), n.value, {
+    }, c = () => {
+      d.value && (l.value = !0, n.value = { title: d.value.title, content: d.value.content });
+    }, h = () => {
+      d.value && window.__plotdesk_shared.inertia.router.put(route("plugin.plotdesk-example-plugin.notes.update", { note: d.value.id }), n.value, {
         preserveScroll: !0,
         onSuccess: () => {
           l.value = !1;
         }
       });
-    }, h = () => {
-      o.value && confirm(`Delete note "${o.value.title}"?`) && window.__plotdesk_shared.inertia.router.delete(route("plugin.plotdesk-example-plugin.notes.destroy", { note: o.value.id }), {
+    }, m = () => {
+      d.value && confirm(t('Delete note "{title}"?', { title: d.value.title })) && window.__plotdesk_shared.inertia.router.delete(route("plugin.plotdesk-example-plugin.notes.destroy", { note: d.value.id }), {
         preserveScroll: !0,
         onSuccess: () => {
-          i.value = null;
+          r.value = null;
         }
       });
     };
-    return (s, e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", b, [
-      window.__plotdesk_shared.vue.createElementVNode("aside", y, [
-        window.__plotdesk_shared.vue.createElementVNode("div", E, [
-          e[6] || (e[6] = window.__plotdesk_shared.vue.createElementVNode("h2", { class: "notebook__title" }, "Notes", -1)),
+    return (_, o) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", f, [
+      window.__plotdesk_shared.vue.createElementVNode("aside", E, [
+        window.__plotdesk_shared.vue.createElementVNode("div", g, [
+          window.__plotdesk_shared.vue.createElementVNode("h2", B, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Notes")), 1),
           window.__plotdesk_shared.vue.createElementVNode("button", {
             type: "button",
             class: "pd-btn pd-btn--primary",
-            onClick: e[0] || (e[0] = (t) => _.value = !_.value)
-          }, window.__plotdesk_shared.vue.toDisplayString(_.value ? "Cancel" : "+ New"), 1)
+            onClick: o[0] || (o[0] = (e) => a.value = !a.value)
+          }, window.__plotdesk_shared.vue.toDisplayString(a.value ? window.__plotdesk_shared.vue.unref(t)("Cancel") : window.__plotdesk_shared.vue.unref(t)("+ New")), 1)
         ]),
-        _.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", B, [
+        a.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", N, [
           window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("input", {
-            "onUpdate:modelValue": e[1] || (e[1] = (t) => d.value.title = t),
+            "onUpdate:modelValue": o[1] || (o[1] = (e) => s.value.title = e),
             type: "text",
-            placeholder: "Title",
+            placeholder: window.__plotdesk_shared.vue.unref(t)("Title"),
             class: "pd-input"
-          }, null, 512), [
-            [window.__plotdesk_shared.vue.vModelText, d.value.title]
+          }, null, 8, V), [
+            [window.__plotdesk_shared.vue.vModelText, s.value.title]
           ]),
           window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("textarea", {
-            "onUpdate:modelValue": e[2] || (e[2] = (t) => d.value.content = t),
-            placeholder: "Write your note...",
+            "onUpdate:modelValue": o[2] || (o[2] = (e) => s.value.content = e),
+            placeholder: window.__plotdesk_shared.vue.unref(t)("Write your note..."),
             rows: "3",
             class: "pd-input"
-          }, null, 512), [
-            [window.__plotdesk_shared.vue.vModelText, d.value.content]
+          }, null, 8, S), [
+            [window.__plotdesk_shared.vue.vModelText, s.value.content]
           ]),
           window.__plotdesk_shared.vue.withDirectives(window.__plotdesk_shared.vue.createElementVNode("input", {
-            "onUpdate:modelValue": e[3] || (e[3] = (t) => d.value.tags = t),
+            "onUpdate:modelValue": o[3] || (o[3] = (e) => s.value.tags = e),
             type: "text",
-            placeholder: "tags, comma, separated",
+            placeholder: window.__plotdesk_shared.vue.unref(t)("tags, comma, separated"),
             class: "pd-input"
-          }, null, 512), [
-            [window.__plotdesk_shared.vue.vModelText, d.value.tags]
+          }, null, 8, D), [
+            [window.__plotdesk_shared.vue.vModelText, s.value.tags]
           ]),
           window.__plotdesk_shared.vue.createElementVNode("button", {
             type: "button",
             class: "pd-btn pd-btn--primary",
-            onClick: c
-          }, "Create")
+            onClick: v
+          }, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Create")), 1)
         ])) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-        window.__plotdesk_shared.vue.createElementVNode("ul", N, [
-          (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(a.value, (t) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("li", {
-            key: t.id,
-            class: window.__plotdesk_shared.vue.normalizeClass(["notebook__list-item", { "notebook__list-item--active": i.value === t.id }]),
-            onClick: (r) => {
-              i.value = t.id, l.value = !1;
+        window.__plotdesk_shared.vue.createElementVNode("ul", x, [
+          (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(i.value, (e) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("li", {
+            key: e.id,
+            class: window.__plotdesk_shared.vue.normalizeClass(["notebook__list-item", { "notebook__list-item--active": r.value === e.id }]),
+            onClick: (u) => {
+              r.value = e.id, l.value = !1;
             }
           }, [
-            window.__plotdesk_shared.vue.createElementVNode("div", g, window.__plotdesk_shared.vue.toDisplayString(t.title), 1),
-            window.__plotdesk_shared.vue.createElementVNode("div", f, [
-              t.summary ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", x, "summary")) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(t.tags, (r) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", {
-                key: r,
+            window.__plotdesk_shared.vue.createElementVNode("div", T, window.__plotdesk_shared.vue.toDisplayString(e.title), 1),
+            window.__plotdesk_shared.vue.createElementVNode("div", M, [
+              e.summary ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", U, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("summary")), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
+              (window.__plotdesk_shared.vue.openBlock(!0), window.__plotdesk_shared.vue.createElementBlock(window.__plotdesk_shared.vue.Fragment, null, window.__plotdesk_shared.vue.renderList(e.tags, (u) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", {
+                key: u,
                 class: "pd-chip pd-chip--muted"
-              }, window.__plotdesk_shared.vue.toDisplayString(r), 1))), 128))
+              }, window.__plotdesk_shared.vue.toDisplayString(u), 1))), 128))
             ])
-          ], 10, V))), 128))
+          ], 10, C))), 128))
         ]),
-        a.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", S, "No notes yet.")) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
+        i.value.length === 0 ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", I, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("No notes yet.")), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
       ]),
-      window.__plotdesk_shared.vue.createElementVNode("main", C, [
-        o.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", T, [
-          window.__plotdesk_shared.vue.createElementVNode("div", M, [
+      window.__plotdesk_shared.vue.createElementVNode("main", $, [
+        d.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", F, [
+          window.__plotdesk_shared.vue.createElementVNode("div", L, [
             l.value ? window.__plotdesk_shared.vue.withDirectives((window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("input", {
               key: 1,
-              "onUpdate:modelValue": e[4] || (e[4] = (t) => n.value.title = t),
+              "onUpdate:modelValue": o[4] || (o[4] = (e) => n.value.title = e),
               type: "text",
               class: "pd-input pd-input--lg"
             }, null, 512)), [
               [window.__plotdesk_shared.vue.vModelText, n.value.title]
-            ]) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("h1", U, window.__plotdesk_shared.vue.toDisplayString(o.value.title), 1)),
-            window.__plotdesk_shared.vue.createElementVNode("div", I, [
+            ]) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("h1", O, window.__plotdesk_shared.vue.toDisplayString(d.value.title), 1)),
+            window.__plotdesk_shared.vue.createElementVNode("div", z, [
               l.value ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("button", {
                 key: 1,
                 type: "button",
                 class: "pd-btn pd-btn--primary",
-                onClick: v
-              }, "Save")) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("button", {
+                onClick: h
+              }, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Save")), 1)) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("button", {
                 key: 0,
                 type: "button",
                 class: "pd-btn pd-btn--secondary",
-                onClick: k
-              }, "Edit")),
+                onClick: c
+              }, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Edit")), 1)),
               window.__plotdesk_shared.vue.createElementVNode("button", {
                 type: "button",
                 class: "pd-btn pd-btn--ghost pd-btn--danger",
-                onClick: h
-              }, "Delete")
+                onClick: m
+              }, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Delete")), 1)
             ])
           ]),
-          o.value.summary ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", $, [
-            e[7] || (e[7] = window.__plotdesk_shared.vue.createElementVNode("h3", null, "AI Summary", -1)),
-            window.__plotdesk_shared.vue.createElementVNode("p", null, window.__plotdesk_shared.vue.toDisplayString(o.value.summary), 1)
+          d.value.summary ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", A, [
+            window.__plotdesk_shared.vue.createElementVNode("h3", null, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("AI Summary")), 1),
+            window.__plotdesk_shared.vue.createElementVNode("p", null, window.__plotdesk_shared.vue.toDisplayString(d.value.summary), 1)
           ])) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
-          window.__plotdesk_shared.vue.createElementVNode("div", j, [
+          window.__plotdesk_shared.vue.createElementVNode("div", W, [
             l.value ? window.__plotdesk_shared.vue.withDirectives((window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("textarea", {
               key: 1,
-              "onUpdate:modelValue": e[5] || (e[5] = (t) => n.value.content = t),
+              "onUpdate:modelValue": o[5] || (o[5] = (e) => n.value.content = e),
               rows: "14",
               class: "pd-input notebook__editor"
             }, null, 512)), [
               [window.__plotdesk_shared.vue.vModelText, n.value.content]
-            ]) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("pre", F, window.__plotdesk_shared.vue.toDisplayString(o.value.content), 1))
+            ]) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("pre", q, window.__plotdesk_shared.vue.toDisplayString(d.value.content), 1))
           ])
-        ])) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", D, " Select a note to view or edit. "))
+        ])) : (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", j, window.__plotdesk_shared.vue.toDisplayString(window.__plotdesk_shared.vue.unref(t)("Select a note to view or edit.")), 1))
       ])
     ]));
   }
-}, z = /* @__PURE__ */ m(L, [["__scopeId", "data-v-d133a010"]]);
+}, K = /* @__PURE__ */ b(G, [["__scopeId", "data-v-e40eb8c5"]]);
 export {
-  z as default
+  K as default
 };

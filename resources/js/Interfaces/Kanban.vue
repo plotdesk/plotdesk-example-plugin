@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     group: { type: Object, default: () => ({}) },
@@ -8,6 +9,8 @@ const props = defineProps({
     translations: { type: Object, default: () => ({}) },
     payload: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const tasks = ref([]);
 const loading = ref(true);
@@ -23,11 +26,13 @@ const loadTasks = async () => {
             credentials: 'same-origin',
             headers: { Accept: 'application/json' },
         });
-        if (!response.ok) throw new Error(`Request failed (${response.status})`);
+        if (!response.ok) {
+            throw new Error(`Request failed (${response.status})`);
+        }
         const body = await response.json();
         tasks.value = Array.isArray(body?.data) ? body.data : [];
     } catch (e) {
-        error.value = e?.message || 'Failed to load tasks.';
+        error.value = e?.message || $t('Failed to load tasks.');
     } finally {
         loading.value = false;
     }
@@ -35,21 +40,21 @@ const loadTasks = async () => {
 
 onMounted(loadTasks);
 
-const statusColumns = [
-    { id: 'open', title: 'Open', accent: 'var(--pd-text-secondary)' },
-    { id: 'in_progress', title: 'In Progress', accent: 'var(--pd-brand)' },
-    { id: 'blocked', title: 'Blocked', accent: 'var(--pd-danger)' },
-    { id: 'done', title: 'Done', accent: 'var(--pd-success)' },
-];
+const statusColumns = computed(() => [
+    { id: 'open', title: $t('Open'), accent: 'var(--pd-text-secondary)' },
+    { id: 'in_progress', title: $t('In Progress'), accent: 'var(--pd-brand)' },
+    { id: 'blocked', title: $t('Blocked'), accent: 'var(--pd-danger)' },
+    { id: 'done', title: $t('Done'), accent: 'var(--pd-success)' },
+]);
 
-const priorityColumns = [
-    { id: 'urgent', title: 'Urgent', accent: 'var(--pd-danger)' },
-    { id: 'high', title: 'High', accent: 'var(--pd-warning)' },
-    { id: 'medium', title: 'Medium', accent: 'var(--pd-brand)' },
-    { id: 'low', title: 'Low', accent: 'var(--pd-info)' },
-];
+const priorityColumns = computed(() => [
+    { id: 'urgent', title: $t('Urgent'), accent: 'var(--pd-danger)' },
+    { id: 'high', title: $t('High'), accent: 'var(--pd-warning)' },
+    { id: 'medium', title: $t('Medium'), accent: 'var(--pd-brand)' },
+    { id: 'low', title: $t('Low'), accent: 'var(--pd-info)' },
+]);
 
-const columns = computed(() => (groupBy.value === 'priority' ? priorityColumns : statusColumns));
+const columns = computed(() => (groupBy.value === 'priority' ? priorityColumns.value : statusColumns.value));
 
 const tasksByColumn = computed(() => {
     const result = {};
@@ -58,6 +63,11 @@ const tasksByColumn = computed(() => {
     }
     return result;
 });
+
+const priorityLabel = priority => {
+    const map = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+    return $t(map[priority] || priority);
+};
 
 const updateTask = async (task, newValue) => {
     try {
@@ -71,10 +81,12 @@ const updateTask = async (task, newValue) => {
             },
             body: JSON.stringify({ [groupBy.value]: newValue }),
         });
-        if (!response.ok) return;
+        if (!response.ok) {
+            return;
+        }
         await loadTasks();
     } catch (e) {
-        error.value = e?.message || 'Update failed';
+        error.value = e?.message || $t('Update failed');
     }
 };
 </script>
@@ -82,9 +94,9 @@ const updateTask = async (task, newValue) => {
 <template>
     <div class="kanban">
         <header class="kanban__header">
-            <h2>Example Kanban</h2>
+            <h2>{{ $t('Example Kanban') }}</h2>
             <button type="button" class="pd-btn pd-btn--secondary" :disabled="loading" @click="loadTasks">
-                {{ loading ? 'Loading...' : 'Refresh' }}
+                {{ loading ? $t('Loading...') : $t('Refresh') }}
             </button>
         </header>
 
@@ -97,14 +109,14 @@ const updateTask = async (task, newValue) => {
                     <span class="kanban__count">{{ tasksByColumn[col.id]?.length || 0 }}</span>
                 </header>
 
-                <div v-if="(tasksByColumn[col.id] || []).length === 0" class="kanban__empty">No tasks</div>
+                <div v-if="(tasksByColumn[col.id] || []).length === 0" class="kanban__empty">{{ $t('No tasks') }}</div>
                 <div v-else class="kanban__cards">
                     <article v-for="task in tasksByColumn[col.id]" :key="task.id" class="kanban__card">
                         <h4>{{ task.title }}</h4>
                         <p v-if="task.description">{{ task.description }}</p>
                         <div class="kanban__card-meta">
-                            <span class="pd-chip pd-chip--muted">{{ task.priority }}</span>
-                            <span v-if="task.due_date" class="kanban__due">Due {{ task.due_date }}</span>
+                            <span class="pd-chip pd-chip--muted">{{ priorityLabel(task.priority) }}</span>
+                            <span v-if="task.due_date" class="kanban__due">{{ $t('Due {date}', { date: task.due_date }) }}</span>
                         </div>
                         <div class="kanban__card-actions">
                             <select

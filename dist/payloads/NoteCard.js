@@ -1,5 +1,5 @@
 import { _ as a } from "../chunks/_plugin-vue_export-helper-CHgC5LLL.js";
-const n = { class: "note-card" }, r = { class: "note-card__header" }, l = { class: "note-card__title" }, i = {
+const n = { class: "note-card" }, l = { class: "note-card__header" }, r = { class: "note-card__title" }, i = {
   key: 0,
   class: "note-card__id"
 }, p = {
@@ -11,7 +11,8 @@ const n = { class: "note-card" }, r = { class: "note-card__header" }, l = { clas
 }, c = {
   __name: "NoteCard",
   props: {
-    payload: { type: Object, default: () => ({}) }
+    payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) }
   },
   setup(_) {
     const s = _, e = window.__plotdesk_shared.vue.computed(() => {
@@ -19,7 +20,7 @@ const n = { class: "note-card" }, r = { class: "note-card__header" }, l = { clas
       return ((o = (d = s.payload) == null ? void 0 : d.results) == null ? void 0 : o.note) || {};
     });
     return (d, o) => (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("div", n, [
-      window.__plotdesk_shared.vue.createElementVNode("div", r, [
+      window.__plotdesk_shared.vue.createElementVNode("div", l, [
         o[0] || (o[0] = window.__plotdesk_shared.vue.createElementVNode("div", { class: "note-card__icon" }, [
           window.__plotdesk_shared.vue.createElementVNode("svg", {
             viewBox: "0 0 24 24",
@@ -36,7 +37,7 @@ const n = { class: "note-card" }, r = { class: "note-card__header" }, l = { clas
           ])
         ], -1)),
         window.__plotdesk_shared.vue.createElementVNode("div", null, [
-          window.__plotdesk_shared.vue.createElementVNode("div", l, [
+          window.__plotdesk_shared.vue.createElementVNode("div", r, [
             e.value.id ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("span", i, "#" + window.__plotdesk_shared.vue.toDisplayString(e.value.id), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0),
             window.__plotdesk_shared.vue.createTextVNode(" " + window.__plotdesk_shared.vue.toDisplayString(e.value.title), 1)
           ]),
@@ -51,7 +52,7 @@ const n = { class: "note-card" }, r = { class: "note-card__header" }, l = { clas
       e.value.preview ? (window.__plotdesk_shared.vue.openBlock(), window.__plotdesk_shared.vue.createElementBlock("p", w, window.__plotdesk_shared.vue.toDisplayString(e.value.preview), 1)) : window.__plotdesk_shared.vue.createCommentVNode("", !0)
     ]));
   }
-}, v = /* @__PURE__ */ a(c, [["__scopeId", "data-v-9663da30"]]);
+}, v = /* @__PURE__ */ a(c, [["__scopeId", "data-v-9d3b0028"]]);
 export {
   v as default
 };

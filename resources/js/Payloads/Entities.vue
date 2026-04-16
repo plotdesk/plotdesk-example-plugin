@@ -1,43 +1,34 @@
 <script setup>
 import { computed } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     payload: { type: Object, default: () => ({}) },
+    translations: { type: Object, default: () => ({}) },
 });
 
-const results = computed(() => props.payload?.results || {});
-const entities = computed(() => results.value.entities || {});
+const $t = useTranslator(computed(() => props.translations));
 
-const groups = computed(() => [
-    { id: 'people', label: 'People', style: 'pd-chip--brand' },
-    { id: 'organizations', label: 'Organizations', style: 'pd-chip--info' },
-    { id: 'places', label: 'Places', style: 'pd-chip--warning' },
-    { id: 'dates', label: 'Dates', style: 'pd-chip--success' },
-]);
-
-const totalCount = computed(() =>
-    Object.values(entities.value).reduce((acc, list) => acc + (Array.isArray(list) ? list.length : 0), 0),
+const entities = computed(() => props.payload?.results?.entities || {});
+const groups = computed(() =>
+    Object.entries(entities.value)
+        .filter(([, values]) => Array.isArray(values) && values.length)
+        .map(([key, values]) => ({ key, values }))
 );
+const entityLabel = (key) => $t(`entity.${key}`);
 </script>
 
 <template>
     <div class="entities">
         <div class="entities__header">
-            <span>Entities</span>
-            <span class="entities__count">{{ totalCount }} found</span>
+            <span>{{ $t('Entities') }}</span>
         </div>
-        <div v-if="totalCount === 0" class="entities__empty">No entities detected.</div>
+        <div v-if="groups.length === 0" class="entities__empty">{{ $t('No entities found.') }}</div>
         <div v-else class="entities__groups">
-            <div v-for="group in groups" :key="group.id" class="entities__group">
-                <div class="entities__group-label">{{ group.label }}</div>
-                <div class="entities__list">
-                    <span
-                        v-for="value in (entities[group.id] || [])"
-                        :key="`${group.id}-${value}`"
-                        class="pd-chip"
-                        :class="group.style"
-                    >{{ value }}</span>
-                    <span v-if="(entities[group.id] || []).length === 0" class="entities__empty-inline">—</span>
+            <div v-for="group in groups" :key="group.key" class="entities__group">
+                <div class="entities__label">{{ entityLabel(group.key) }}</div>
+                <div class="entities__chips">
+                    <span v-for="value in group.values" :key="`${group.key}-${value}`" class="pd-chip pd-chip--info">{{ value }}</span>
                 </div>
             </div>
         </div>
@@ -46,17 +37,11 @@ const totalCount = computed(() =>
 
 <style scoped>
 .entities { background: var(--pd-bg-card); border: 1px solid var(--pd-border); border-radius: var(--pd-radius-md); overflow: hidden; }
-.entities__header { padding: var(--pd-space-sm) var(--pd-space-md); background: var(--pd-bg-subtle); display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pd-text-secondary); border-bottom: 1px solid var(--pd-border-light); }
-.entities__count { font-weight: 500; text-transform: none; letter-spacing: normal; color: var(--pd-text-muted); }
+.entities__header { padding: var(--pd-space-sm) var(--pd-space-md); background: var(--pd-bg-subtle); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pd-text-secondary); border-bottom: 1px solid var(--pd-border-light); }
 .entities__empty { padding: var(--pd-space-lg); text-align: center; color: var(--pd-text-muted); font-size: 13px; }
-.entities__groups { padding: var(--pd-space-md); display: grid; gap: var(--pd-space-md); }
-.entities__group-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pd-text-secondary); font-weight: 600; margin-bottom: 4px; }
-.entities__list { display: flex; flex-wrap: wrap; gap: 6px; }
-.entities__empty-inline { color: var(--pd-text-muted); font-size: 13px; }
-
-.pd-chip { display: inline-flex; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
-.pd-chip--brand { background: var(--pd-brand-light); color: var(--pd-brand); }
+.entities__groups { padding: var(--pd-space-md); display: grid; gap: var(--pd-space-sm); }
+.entities__label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--pd-text-secondary); margin-bottom: 4px; }
+.entities__chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.pd-chip { display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
 .pd-chip--info { background: var(--pd-info-light); color: var(--pd-info); }
-.pd-chip--warning { background: var(--pd-warning-light); color: var(--pd-warning); }
-.pd-chip--success { background: var(--pd-success-light); color: var(--pd-success); }
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useTranslator } from '../translator.js';
 
 const props = defineProps({
     group: { type: Object, default: () => ({}) },
@@ -8,6 +9,8 @@ const props = defineProps({
     translations: { type: Object, default: () => ({}) },
     payload: { type: Object, default: () => ({}) },
 });
+
+const $t = useTranslator(computed(() => props.translations));
 
 const tasks = ref([]);
 const loading = ref(true);
@@ -21,7 +24,9 @@ const showCompleted = computed(() => {
 const maxItems = computed(() => {
     const raw = props.interfaceSettings?.max_items;
     const parsed = parseInt(raw, 10);
-    if (Number.isNaN(parsed)) return 10;
+    if (Number.isNaN(parsed)) {
+        return 10;
+    }
     return Math.max(1, Math.min(50, parsed));
 });
 
@@ -33,11 +38,13 @@ const loadTasks = async () => {
             credentials: 'same-origin',
             headers: { Accept: 'application/json' },
         });
-        if (!response.ok) throw new Error(`Request failed (${response.status})`);
+        if (!response.ok) {
+            throw new Error(`Request failed (${response.status})`);
+        }
         const body = await response.json();
         tasks.value = Array.isArray(body?.data) ? body.data : [];
     } catch (e) {
-        error.value = e?.message || 'Failed to load tasks.';
+        error.value = e?.message || $t('Failed to load tasks.');
     } finally {
         loading.value = false;
     }
@@ -62,49 +69,59 @@ const priorityStyle = p => ({
     high: 'pd-chip--warning',
     urgent: 'pd-chip--danger',
 })[p] || 'pd-chip--muted';
+
+const priorityLabel = priority => {
+    const map = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+    return $t(map[priority] || priority);
+};
+
+const statusLabel = status => {
+    const map = { open: 'Open', in_progress: 'In Progress', blocked: 'Blocked', done: 'Done' };
+    return $t(map[status] || status);
+};
 </script>
 
 <template>
     <div class="interface">
         <header class="interface__header">
             <div>
-                <h2>Tasks Overview</h2>
-                <p>Live view of tasks tracked by this plugin for group “{{ group?.name }}”.</p>
+                <h2>{{ $t('Tasks Overview') }}</h2>
+                <p>{{ $t('Live view of tasks tracked by this plugin for group "{name}".', { name: group?.name || '' }) }}</p>
             </div>
             <button type="button" class="pd-btn pd-btn--secondary" :disabled="loading" @click="loadTasks">
-                {{ loading ? 'Refreshing...' : 'Refresh' }}
+                {{ loading ? $t('Refreshing...') : $t('Refresh') }}
             </button>
         </header>
 
         <section class="interface__stats">
             <div class="stat">
-                <span class="stat__label">Open</span>
+                <span class="stat__label">{{ $t('Open') }}</span>
                 <span class="stat__value">{{ openCount }}</span>
             </div>
             <div class="stat">
-                <span class="stat__label">In Progress</span>
+                <span class="stat__label">{{ $t('In Progress') }}</span>
                 <span class="stat__value">{{ inProgressCount }}</span>
             </div>
             <div class="stat">
-                <span class="stat__label">Completed</span>
+                <span class="stat__label">{{ $t('Completed') }}</span>
                 <span class="stat__value">{{ doneCount }}</span>
             </div>
         </section>
 
         <section class="interface__list">
             <div v-if="error" class="interface__error">{{ error }}</div>
-            <div v-else-if="loading && filteredTasks.length === 0" class="interface__empty">Loading tasks...</div>
+            <div v-else-if="loading && filteredTasks.length === 0" class="interface__empty">{{ $t('Loading tasks...') }}</div>
             <div v-else-if="filteredTasks.length === 0" class="interface__empty">
-                No tasks to show. Ask the AI to create one with the Example Tasks app!
+                {{ $t('No tasks to show. Ask the AI to create one with the Example Tasks app!') }}
             </div>
             <ul v-else class="task-list">
                 <li v-for="task in filteredTasks" :key="task.id" class="task-list__item">
                     <div class="task-list__main">
                         <span class="task-list__title">{{ task.title }}</span>
                         <div class="task-list__meta">
-                            <span class="pd-chip" :class="priorityStyle(task.priority)">{{ task.priority }}</span>
-                            <span class="pd-chip pd-chip--muted">{{ task.status }}</span>
-                            <span v-if="task.due_date" class="task-list__due">Due {{ task.due_date }}</span>
+                            <span class="pd-chip" :class="priorityStyle(task.priority)">{{ priorityLabel(task.priority) }}</span>
+                            <span class="pd-chip pd-chip--muted">{{ statusLabel(task.status) }}</span>
+                            <span v-if="task.due_date" class="task-list__due">{{ $t('Due {date}', { date: task.due_date }) }}</span>
                         </div>
                     </div>
                 </li>
